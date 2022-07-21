@@ -1,11 +1,11 @@
 <template>
   <span class="headerAvatar">
     <template v-if="picType === 'avatar'">
-      <el-avatar v-if="userInfo.avatarUrl" :size="30" :src="avatar" />
+      <el-avatar v-if="userStore.userInfo.avatarUrl" :size="30" :src="avatar" />
       <el-avatar v-else :size="30" :src="noAvatar" />
     </template>
     <template v-if="picType === 'img'">
-      <img v-if="userInfo.avatarUrl" :src="avatar" class="avatar">
+      <img v-if="userStore.userInfo.avatarUrl" :src="avatar" class="avatar">
       <img v-else :src="noAvatar" class="avatar">
     </template>
     <template v-if="picType === 'file'">
@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import noAvatarPng from '@/assets/noBody.png'
 import { useUserStore } from '@/store/modules/user'
 

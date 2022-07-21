@@ -4,18 +4,10 @@
         <div class="gva-table-box">
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="addUser">新增用户</el-button>
-                <el-select
-                    v-model="optionType"
-                    placeholder="请选择"
-                    size="small"
-                    style="width:10rem;margin-right: 1rem;margin-left: 1rem;"
-                >
-                    <el-option
-                        v-for="item in optionsBatch"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
+                <el-select v-model="optionType" placeholder="请选择" size="small"
+                    style="width:10rem;margin-right: 1rem;margin-left: 1rem;">
+                    <el-option v-for="item in optionsBatch" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
                 </el-select>
                 <el-button @click="onSubmit('batch', 0)" type="primary">批量操作</el-button>
             </div>
@@ -54,50 +46,33 @@
                 </el-table-column>
                 <el-table-column align="left" label="用户角色" min-width="150">
                     <template #default="scope">
-                        <el-cascader
-                            v-model="scope.row.authorityIds"
-                            :options="authOptions"
-                            :show-all-levels="false"
+                        <el-cascader v-model="scope.row.authorityIds" :options="authOptions" :show-all-levels="false"
                             collapse-tags
                             :props="{ multiple: true, checkStrictly: true, label: 'authorityName', value: 'authorityId', emitPath: false }"
-                            :clearable="false"
-                            @visible-change="(flag) => { changeAuthority(scope.row, flag) }"
-                            @remove-tag="() => { changeAuthority(scope.row, false) }"
-                        />
+                            :clearable="false" @visible-change="(flag) => { changeAuthority(scope.row, flag) }"
+                            @remove-tag="() => { changeAuthority(scope.row, false) }" />
                     </template>
                 </el-table-column>
-                <el-table-column align="left" label="操作" min-width="150">
+                <el-table-column align="left" label="操作" min-width="190">
                     <template #default="scope">
                         <el-popover :visible="scope.row.visible" placement="top" width="160">
                             <p>确定要删除此用户吗</p>
                             <div style="text-align: right; margin-top: 8px;">
-                                <el-button type="text" @click="scope.row.visible = false">取消</el-button>
+                                <el-button type="primary" @click="scope.row.visible = false">取消</el-button>
                                 <el-button type="primary" @click="deleteUser(scope.row)">确定</el-button>
                             </div>
                             <template #reference>
-                                <el-button type="text" icon="delete">删除</el-button>
+                                <el-button type="primary" icon="delete">删除</el-button>
                             </template>
                         </el-popover>
-                        <el-button
-                            type="text"
-                            icon="magic-stick"
-                            @click="resetPassword(scope.row)"
-                        >重置密码</el-button>
+                        <el-button type="primary" icon="magic-stick" @click="resetPassword(scope.row)">重置密码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="gva-pagination">
-                <el-pagination
-                    small
-                    background
-                    :current-page="page"
-                    :page-size="pageSize"
-                    :page-sizes="[10, 30, 50, 100]"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total"
-                    @current-change="handleCurrentChange"
-                    @size-change="handleSizeChange"
-                />
+                <el-pagination small background :current-page="page" :page-size="pageSize"
+                    :page-sizes="[10, 30, 50, 100]" layout="total, sizes, prev, pager, next, jumper" :total="total"
+                    @current-change="handleCurrentChange" @size-change="handleSizeChange" />
             </div>
         </div>
         <el-dialog v-model="addUserDialog" custom-class="user-dialog" title="新增用户">
@@ -112,22 +87,15 @@
                     <el-input v-model="userInfo.realName" />
                 </el-form-item>
                 <el-form-item label="用户角色" prop="authorityId">
-                    <el-cascader
-                        v-model="userInfo.authorityIds"
-                        style="width:100%"
-                        :options="authOptions"
+                    <el-cascader v-model="userInfo.authorityIds" style="width:100%" :options="authOptions"
                         :show-all-levels="false"
                         :props="{ multiple: true, checkStrictly: true, label: 'authorityName', value: 'authorityId', disabled: 'disabled', emitPath: false }"
-                        :clearable="false"
-                    />
+                        :clearable="false" />
                 </el-form-item>
                 <el-form-item label="头像" label-width="80px">
                     <div style="display:inline-block" @click="openHeaderChange">
-                        <img
-                            v-if="userInfo.avatarUrl"
-                            class="header-img-box"
-                            :src="(userInfo.avatarUrl && userInfo.avatarUrl.slice(0, 4) !== 'http') ? path + userInfo.avatarUrl : userInfo.avatarUrl"
-                        />
+                        <img v-if="userInfo.avatarUrl" class="header-img-box"
+                            :src="(userInfo.avatarUrl && userInfo.avatarUrl.slice(0, 4) !== 'http') ? path + userInfo.avatarUrl : userInfo.avatarUrl" />
                         <div v-else class="header-img-box">从媒体库选择</div>
                     </div>
                 </el-form-item>
@@ -144,8 +112,12 @@
 </template>
 
 <script>
-// 获取列表内容封装在mixins内部  getTableData方法 初始化已封装完成
-const path = import.meta.env.VITE_BASE_API
+export default {
+    name: 'userList'
+}
+</script>
+
+<script setup>
 import {
     getUserList,
     setUserAuthorities,
@@ -154,67 +126,114 @@ import {
     optionUser
 } from '@/api/user'
 import { getAuthorityList } from '@/api/authority'
-import infoList from '@/mixins/infoList'
 // import { mapGetters } from 'vuex'
 import CustomPic from '@/components/customPic/index.vue'
 // import ChooseImg from '@/components/chooseImg/index.vue'
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { setUserInfo, resetPassword } from '@/api/user.js'
-export default {
-    name: 'Api',
-    components: {
-        CustomPic,
-        warningBar
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+
+const rules = ref({
+    username: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
+        { min: 5, message: '最低5位字符', trigger: 'blur' }
+    ],
+    password: [
+        { required: true, message: '请输入用户密码', trigger: 'blur' },
+        { min: 6, message: '最低6位字符', trigger: 'blur' }
+    ],
+    realName: [
+        { required: true, message: '请输入用户真实姓名', trigger: 'blur' }
+    ],
+    authorityId: [
+        { required: true, message: '请选择用户角色', trigger: 'blur' }
+    ]
+})
+const userInfo = ref({
+    username: '',
+    password: '',
+    realName: '',
+    avatarUrl: 'https://qmplusimg.henrongyi.top/gva_header.jpg',
+    authorityId: '',
+    authorityIds: []
+})
+const optionsBatch = ref([
+    {
+        value: '0',
+        label: '封禁',
     },
-    mixins: [infoList],
+    {
+        value: '1',
+        label: '解封',
+    },
+    {
+        value: 'Delete',
+        label: '删除',
+    },
+])
+
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(999)
+const tableData = ref([])
+const searchInfo = ref({})
+
+const getTableData = async () => {
+    const table = await getUserList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+    console.log(table)
+    if (table.code === 0) {
+        tableData.value = table.data.list
+        total.value = table.data.total
+        page.value = table.data.page
+        pageSize.value = table.data.pageSize
+    }
+}
+getTableData()
+
+const addUserDialog = ref(false)
+const addUser = () => {
+    addUserDialog = true
+}
+
+const enterAddUserDialog = async() => {
+    userInfo.value.authorityId = userInfo.value.authorityIds[0]
+    userForm.value.validate(async valid => {
+        if (valid) {
+            const res = await register(userInfo.value)
+            if (res.code === 0) {
+                ElMessage({
+                    type: 'success',
+                    message: '创建成功'
+                })
+            }
+            await getTableData()
+            closeAddUserDialog()
+        }
+    })
+}
+
+const closeAddUserDialog = () => {
+    userForm.value.resetFields()
+    userInfo.value.avatarUrl = ''
+    userInfo.value.authorityIds = []
+    addUserDialog.value = false
+}
+
+
+</script>
+
+
+<!-- <script>
+const path = import.meta.env.VITE_BASE_API
+export default {
     data() {
         return {
-            total: 2,
-            listApi: getUserList,
             path: path,
             authOptions: [],
-            addUserDialog: false,
             backNickName: '',
-            userInfo: {
-                username: '',
-                password: '',
-                realName: '',
-                avatarUrl: 'https://qmplusimg.henrongyi.top/gva_header.jpg',
-                authorityId: '',
-                authorityIds: []
-            },
             optionType: '',
             optionIds: [],
-            optionsBatch: [
-                {
-                    value: '0',
-                    label: '封禁',
-                },
-                {
-                    value: '1',
-                    label: '解封',
-                },
-                {
-                    value: 'Delete',
-                    label: '删除',
-                },
-            ],
-            rules: {
-                username: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 5, message: '最低5位字符', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入用户密码', trigger: 'blur' },
-                    { min: 6, message: '最低6位字符', trigger: 'blur' }
-                ],
-                realName: [
-                    { required: true, message: '请输入用户真实姓名', trigger: 'blur' }
-                ],
-                authorityId: [
-                    { required: true, message: '请选择用户角色', trigger: 'blur' }
-                ]
-            }
         }
     },
     // computed: {
@@ -226,7 +245,6 @@ export default {
         }
     },
     async created() {
-        await this.getTableData()
         const res = await getAuthorityList({ page: 1, pageSize: 999 })
         console.log('77')
         console.log(res.data.list)
@@ -346,28 +364,9 @@ export default {
                 row.visible = false
             }
         },
-        async enterAddUserDialog() {
-            this.userInfo.authorityId = this.userInfo.authorityIds[0]
-            this.$refs.userForm.validate(async valid => {
-                if (valid) {
-                    const res = await register(this.userInfo)
-                    if (res.code === 0) {
-                        this.$message({ type: 'success', message: '创建成功' })
-                    }
-                    await this.getTableData()
-                    this.closeAddUserDialog()
-                }
-            })
-        },
-        closeAddUserDialog() {
-            this.$refs.userForm.resetFields()
-            this.userInfo.avatarUrl = ''
-            this.userInfo.authorityIds = []
-            this.addUserDialog = false
-        },
-        addUser() {
-            this.addUserDialog = true
-        },
+        
+        
+        
         async changeAuthority(row, flag) {
             if (flag) {
                 return
@@ -384,7 +383,7 @@ export default {
         },
     }
 }
-</script>
+</script> -->
 
 <style lang="scss">
 .user-dialog {
@@ -397,9 +396,11 @@ export default {
         line-height: 200px;
         cursor: pointer;
     }
+
     .avatar-uploader .el-upload:hover {
         border-color: #409eff;
     }
+
     .avatar-uploader-icon {
         border: 1px dashed #d9d9d9 !important;
         border-radius: 6px;
@@ -410,17 +411,20 @@ export default {
         line-height: 178px;
         text-align: center;
     }
+
     .avatar {
         width: 178px;
         height: 178px;
         display: block;
     }
 }
+
 .nickName {
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
+
 .pointer {
     cursor: pointer;
     font-size: 16px;

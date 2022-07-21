@@ -8,8 +8,6 @@ const service = axios.create({
     baseURL: import.meta.env.VITE_BASE_API,
     timeout: 99999
 })
-console.log('+++++++++')
-console.log(import.meta.env.VITE_BASE_API)
 let acitveAxios = 0
 let timer
 const showLoading = () => {

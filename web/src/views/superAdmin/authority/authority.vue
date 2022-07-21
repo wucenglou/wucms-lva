@@ -6,13 +6,8 @@
         <el-button type="primary" icon="plus" @click="addAuthority('0')">新增角色</el-button>
       </div>
 
-      <el-table
-        :data="tableData"
-        border
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        row-key="authorityId"
-        style="width: 100%"
-      >
+      <el-table :data="tableData" border :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        row-key="authorityId" style="width: 100%">
         <el-table-column label="角色ID" min-width="40" prop="authorityId" />
         <el-table-column align="left" label="角色名称" min-width="100" prop="authorityName" />
         <el-table-column align="left" label="系统用户" min-width="50" prop="authoritySys">
@@ -23,19 +18,11 @@
         <el-table-column align="left" label="角色描述" min-width="100" prop="authorityDescribe" />
         <el-table-column align="left" label="操作" width="360">
           <template #default="scope">
-            <el-button icon="setting" type="text" @click="opdendrawer(scope.row)">设置权限</el-button>
-            <el-button
-              icon="plus"
-              type="text"
-              @click="addAuthority(scope.row.authorityId)"
-            >新增子角色</el-button>
-            <el-button
-              icon="copy-document"
-              type="text"
-              @click="copyAuthority(scope.row)"
-            >拷贝</el-button>
-            <el-button icon="edit" type="text" @click="editAuthority(scope.row)">编辑</el-button>
-            <el-button icon="delete" type="text" @click="deleteAuth(scope.row)">删除</el-button>
+            <el-button icon="setting" type="primary" @click="opdendrawer(scope.row)">设置权限</el-button>
+            <el-button icon="plus" type="primary" @click="addAuthority(scope.row.authorityId)">新增子角色</el-button>
+            <el-button icon="copy-document" type="primary" @click="copyAuthority(scope.row)">拷贝</el-button>
+            <el-button icon="edit" type="primary" @click="editAuthority(scope.row)">编辑</el-button>
+            <el-button icon="delete" type="primary" @click="deleteAuth(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,15 +31,10 @@
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="父级角色" prop="parentId">
-          <el-cascader
-            v-model="form.parentId"
-            style="width:100%"
-            :disabled="dialogType == 'add'"
+          <el-cascader v-model="form.parentId" style="width:100%" :disabled="dialogType == 'add'"
             :options="AuthorityOption"
             :props="{ checkStrictly: true, label: 'authorityName', value: 'authorityId', disabled: 'disabled', emitPath: false }"
-            :show-all-levels="false"
-            filterable
-          />
+            :show-all-levels="false" filterable />
         </el-form-item>
         <el-form-item label="角色名称" prop="authorityName">
           <el-input v-model="form.authorityName" autocomplete="off" />
@@ -61,12 +43,8 @@
           <el-switch v-model="form.authoritySys" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
         <el-form-item label="角色描述" prop="authorityDescribe">
-          <el-input
-            v-model="form.authorityDescribe"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-            type="textarea"
-            autocomplete="off"
-          />
+          <el-input v-model="form.authorityDescribe" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"
+            autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -94,8 +72,12 @@
 </template>
 
 <script>
-// 获取列表内容封装在mixins内部  getTableData方法 初始化已封装完成
+export default {
+  name: 'Authority'
+}
+</script>
 
+<script setup>
 import {
   getAuthorityList,
   deleteAuthority,
@@ -103,11 +85,87 @@ import {
   updateAuthority,
   copyAuthority
 } from '@/api/authority'
-
+import { ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import Menus from '@/views/superAdmin/authority/components/menus.vue'
 import Apis from '@/views/superAdmin/authority/components/apis.vue'
 // import Datas from '@/views/superAdmin/authority/components/datas.vue'
 import warningBar from '@/components/warningBar/warningBar.vue'
+
+const mustUint = (rule, value, callback) => {
+  if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
+    return callback(new Error('请输入正整数'))
+  }
+  return callback()
+}
+
+const AuthorityOption = ref([
+  {
+    authorityId: '0',
+    authorityName: '根角色'
+  }
+])
+
+const drawer = ref(false)
+const dialogType = ref('add')
+const activeRow = ref({})
+
+const dialogTitle = ref('新增角色')
+const dialogFormVisible = ref(false)
+const apiDialogFlag = ref(false)
+const copyForm = ref({})
+
+const form = ref({
+  // authorityId: '',
+  authorityName: '',
+  authoritySys: 1,
+  authorityDescribe: '',
+  parentId: '0'
+})
+const rules = ref({
+  // authorityId: [
+  //   { required: true, message: '请输入角色ID', trigger: 'blur' },
+  //   { validator: mustUint, trigger: 'blur' }
+  // ],
+  authorityName: [
+    { required: true, message: '请输入角色名', trigger: 'blur' }
+  ],
+  parentId: [
+    { required: true, message: '请选择请求方式', trigger: 'blur' }
+  ]
+})
+
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(999)
+const tableData = ref([])
+const searchInfo = ref({})
+
+// 查询
+const getTableData = async() => {
+  const table = await getAuthorityList({ page: page.value,pageSize: pageSize.value, ...searchInfo.value })
+  if (table.code === 0) {
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
+  }
+}
+
+getTableData()
+
+const changeRow = (key, value) => {
+  activeRow.value[key] = value
+}
+const menus = ref(null)
+
+
+
+
+
+</script>
+
+<!-- <script>
 
 import infoList from '@/mixins/infoList'
 export default {
@@ -128,40 +186,12 @@ export default {
     }
 
     return {
-      AuthorityOption: [
-        {
-          authorityId: '0',
-          authorityName: '根角色'
-        }
-      ],
+      
       listApi: getAuthorityList,
-      drawer: false,
-      dialogType: 'add',
-      activeRow: {},
+      
       activeUserId: 0,
-      dialogTitle: '新增角色',
-      dialogFormVisible: false,
-      apiDialogFlag: false,
-      copyForm: {},
-      form: {
-        // authorityId: '',
-        authorityName: '',
-        authoritySys: 1,
-        authorityDescribe: '',
-        parentId: '0'
-      },
-      rules: {
-        // authorityId: [
-        //   { required: true, message: '请输入角色ID', trigger: 'blur' },
-        //   { validator: mustUint, trigger: 'blur' }
-        // ],
-        authorityName: [
-          { required: true, message: '请输入角色名', trigger: 'blur' }
-        ],
-        parentId: [
-          { required: true, message: '请选择请求方式', trigger: 'blur' }
-        ]
-      }
+      
+      
     }
   },
   async created() {
@@ -374,17 +404,17 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <style lang="scss">
-.authority {
-  // .el-input-number {
-  //   margin-left: 15px;
-  //   span {
-  //     display: none;
-  //   }
-  // }
-}
+// .authority {
+// .el-input-number {
+//   margin-left: 15px;
+//   span {
+//     display: none;
+//   }
+// }
+// }
 .role-box {
   .el-tabs__content {
     height: calc(100vh - 72px);

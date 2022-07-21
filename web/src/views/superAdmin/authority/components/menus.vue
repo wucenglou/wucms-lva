@@ -19,7 +19,7 @@
           <span>{{ node.label }}</span>
           <span>
             <el-button
-              type="text"
+              type="primary"
               size="mini"
               :style="{color:row.defaultRouter === data.name?'#E6A23C':'#85ce61'}"
               :disabled="!node.checked"

@@ -1,5 +1,4 @@
 import router from '@/router'
-// import { store } from '@/store/index'
 import { useUserStore } from '@/store/modules/user'
 import { useRouterStore } from '@/store/modules/router'
 import getPageTitle from '@/utils/page'

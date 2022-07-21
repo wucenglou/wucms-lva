@@ -99,12 +99,12 @@
           </template>
         </el-table-column>-->
 
-        <el-table-column fixed="right" label="操作" width="160">
+        <el-table-column fixed="right" label="操作" width="190">
           <template #default="scope">
-            <el-button type="text" @click="onSubmit('edit', scope.row.id, scope.row, 'check')">预览</el-button>
-            <el-button type="text" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button>
-            <!-- <el-button type="text" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
-            <el-button type="text" @click="onSubmit('delete', scope.row.id, scope.row)">删除</el-button>
+            <el-button type="primary" @click="onSubmit('edit', scope.row.id, scope.row, 'check')">预览</el-button>
+            <el-button type="primary" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button>
+            <!-- <el-button type="primary" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
+            <el-button type="primary" @click="onSubmit('delete', scope.row.id, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +132,7 @@ export default {
 </script>
 
 <script setup>
-import { defineComponent, ref, watch, getCurrentInstance } from 'vue'
+import { ref, watch } from 'vue'
 import { getModeList } from '@/api/mode'
 import { getPosts, deletePost, optionsPost } from '@/api/post'
 import { useRouter, useRoute } from 'vue-router'
@@ -149,11 +149,11 @@ onMounted(() => {
 onUnmounted(() => {
   console.log('我销毁了');
 })
-
+console.log('content++++++++++')
 const route = useRoute()
 const router = useRouter()
 
-
+console.log('content')
 // const searchInfo = ref({
 //   id: '',
 //   modeId: 0,

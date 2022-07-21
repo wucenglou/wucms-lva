@@ -63,6 +63,11 @@
     </div>
 </template>
 
+<script>
+export default {
+    name: 'userLog'
+}
+</script>
 <script setup>
 
 import { getloginLog } from '@/api/user'

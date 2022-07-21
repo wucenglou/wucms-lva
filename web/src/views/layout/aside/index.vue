@@ -3,12 +3,16 @@
     <el-scrollbar style="height:calc(100vh - 60px)">
       <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
         <el-menu :collapse="isCollapse" :collapse-transition="false" :default-active="active"
-          :background-color="sideMode" :active-text-color="activeColor" :text-color="baseColor" class="el-menu-vertical"
-          unique-opened @select="selectMenuItem">
+          :background-color="theme.background" :active-text-color="theme.active" class="el-menu-vertical" unique-opened
+          @select="selectMenuItem">
           <!-- {{'1.'+ active + '2.'+sideMode + '3.'+ ctiveColor + '4.'+ baseColor}} -->
           <template v-for="item in routerStore.asyncRouters[0].children">
-            <aside-component v-if="!item.hidden" :key="item.name" :is-collapse="isCollapse" :router-info="item"
-              :theme="theme" />
+            <aside-component 
+            v-if="!item.hidden" 
+            :key="item.name" 
+            :is-collapse="isCollapse" 
+            :router-info="item"
+            :theme="theme" />
           </template>
         </el-menu>
       </transition>
@@ -64,6 +68,9 @@ const getTheme = () => {
 }
 getTheme()
 const active = ref('')
+watch(() => route, () => {
+  active.value = route.name
+}, { deep: true })
 watch(() => userStore.sideMode, () => {
   getTheme()
 })
@@ -79,7 +86,9 @@ const initPage = () => {
     isCollapse.value = item
   })
 }
+
 initPage()
+
 onUnmounted(() => {
   emitter.off('collapse')
 })
@@ -87,7 +96,7 @@ onUnmounted(() => {
 const selectMenuItem = (index, _, ele, aaa) => {
   const query = {}
   const params = {}
-  routerStore.routeMap[index]?.params && routerStore.routeMap[index]?.parameters.forEach((item) => {
+  routerStore.routeMap[index]?.parameters && routerStore.routeMap[index]?.parameters.forEach((item) => {
     if (item.type == 'query') {
       query[item.key] = item.value
     } else {
@@ -95,9 +104,11 @@ const selectMenuItem = (index, _, ele, aaa) => {
     }
   });
   if (index === route.name) return
-  if (index.indexOf('http://') > -1 || index.indexOf('https://' > -1)) {
+  if (index.indexOf('http://') > -1 || index.indexOf('https://') > -1) {
     window.open(index)
   } else {
+    // console.log('-----------')
+    // console.log(index)
     router.push({ name: index, query, params })
   }
 }

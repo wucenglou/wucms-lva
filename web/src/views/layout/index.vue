@@ -31,8 +31,8 @@
                     <el-col :xs="10" :lg="14" :md="14" :sm="9" :xl="14" :pull="1">
                       <el-breadcrumb class="breadcrumb">
                         <el-breadcrumb-item v-for="item in matched.slice(1, matched.length)" :key="item.path">{{
-                          item.meta.title
-                          }}</el-breadcrumb-item>
+                          fmtTitle(item.meta.title, route)
+                        }}</el-breadcrumb-item>
                       </el-breadcrumb>
                     </el-col>
                     <el-col :xs="12" :lg="9" :md="9" :sm="14" :xl="9">
@@ -42,7 +42,7 @@
                           <div class="dp-flex justify-content-center align-items height-full width-full">
                             <span class="header-avatar" style="cursor: pointer">
                               <CustomPic />
-                              <span style="margin-left: 5px">{{ userInfo.username }}</span>
+                              <span style="margin-left: 5px">{{ userStore.userInfo.username }}</span>
                               <el-icon>
                                 <arrow-down />
                               </el-icon>
@@ -52,12 +52,12 @@
                             <el-dropdown-menu class="dropdown-group">
                               <el-dropdown-item>
                                 <span style="font-weight: 600;">
-                                  当前角色：{{ userInfo.authority.authorityName }}
+                                  当前角色：{{ userStore.userInfo.authority.authorityName }}
                                 </span>
                               </el-dropdown-item>
-                              <template v-if="userInfo.authorities">
+                              <template v-if="userStore.userInfo.authorities">
                                 <el-dropdown-item
-                                  v-for="item in userInfo.authorities.filter(i => i.authorityId !== userInfo.authorityId)"
+                                  v-for="item in userStore.userInfo.authorities.filter(i => i.authorityId !== userStore.userInfo.authorityId)"
                                   :key="item.authorityId" @click="changeUserAuth(item.authorityId)">
                                   <span>
                                     切换为：{{ item.authorityName }}
@@ -65,7 +65,7 @@
                                 </el-dropdown-item>
                               </template>
                               <el-dropdown-item icon="avatar" @click="toPerson">个人信息</el-dropdown-item>
-                              <el-dropdown-item icon="reading-lamp" @click="LoginOut">登 出</el-dropdown-item>
+                              <el-dropdown-item icon="reading-lamp" @click="userStore.LoginOut">登 出</el-dropdown-item>
                             </el-dropdown-menu>
                           </template>
                         </el-dropdown>
@@ -78,7 +78,7 @@
             <!-- 当前面包屑用路由自动生成可根据需求修改 -->
             <!--
             :to="{ path: item.path }" 暂时注释不用-->
-            <!-- <HistoryComponent ref="layoutHistoryComponent" /> -->
+            <HistoryComponent ref="layoutHistoryComponent" />
           </div>
         </transition>
         <router-view v-if="reloadFlag" v-slot="{ Component }" v-loading="loadingFlag" element-loading-text="正在加载中"
@@ -104,7 +104,7 @@ export default {
 </script>
 <script setup>
 import Aside from '@/views/layout/aside/index.vue'
-// import HistoryComponent from '@/views/layout/aside/historyComponent/history.vue'
+import HistoryComponent from '@/views/layout/aside/historyComponent/history.vue'
 import Search from '@/views/layout/search/search.vue'
 import CustomPic from '@/components/customPic/index.vue'
 import Setting from './setting/index.vue'
@@ -114,10 +114,15 @@ import { computed, ref, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute} from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { useRouterStore } from '@/store/modules/router'
+import { fmtTitle } from '@/utils/fmtRouterTitle'
 
 const router = useRouter()
 const route = useRoute()
 const routerStore = useRouterStore()
+
+console.log('routerStore.keepAliveRouters')
+console.log(routerStore.keepAliveRouters)
+
 // 三种窗口适配
 const isCollapse = ref(false)
 const isSider = ref(true)
@@ -146,7 +151,7 @@ onMounted(() => {
   // 挂载一些通用的事件
   emitter.emit('collapse', isCollapse.value)
   emitter.emit('mobile', isMobile.value)
-  emitter.on('reload', reload.value)
+  emitter.on('reload', reload)
   emitter.on('showLoading', () => {
     loadingFlag.value = true
   })
@@ -160,12 +165,13 @@ onMounted(() => {
       emitter.emit('mobile', isMobile.value)
     })()
   }
-  if (useStore.loadingInstance) {
-    useRouterStore.loadingInstance.close()
+  if (userStore.loadingInstance) {
+    userStore.loadingInstance.close()
   }
 })
 
 const userStore = useUserStore()
+
 const textColor = computed(() => {
   if (userStore.sideMode === 'dark') {
     return '#fff'
@@ -213,7 +219,7 @@ const reload = async () => {
       reloadFlag.value = true
     } else {
       const title = route.meta.title
-      // router.push({ name: 'Reload', params: { title } })
+      router.push({ name: 'Reload', params: { title } })
     }
   }, 400)
 }

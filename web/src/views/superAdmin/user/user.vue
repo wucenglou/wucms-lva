@@ -70,7 +70,7 @@
                             <div style="text-align: right; margin-top: 8px;">
                                 <el-button
                                     size="mini"
-                                    type="text"
+                                    type="primary"
                                     @click="scope.row.visible = false"
                                 >取消</el-button>
                                 <el-button
@@ -80,11 +80,11 @@
                                 >确定</el-button>
                             </div>
                             <template #reference>
-                                <el-button type="text" icon="delete" size="mini">删除</el-button>
+                                <el-button type="primary" icon="delete" size="mini">删除</el-button>
                             </template>
                         </el-popover>
                         <el-button
-                            type="text"
+                            type="primary"
                             icon="magic-stick"
                             size="mini"
                             @click="resetPassword(scope.row)"
@@ -157,7 +157,7 @@ import {
     deleteUser
 } from '@/api/user'
 import { getAuthorityList } from '@/api/authority'
-import infoList from '@/mixins/infoList'
+// import infoList from '@/mixins/infoList'
 // import { mapGetters } from 'vuex'
 import CustomPic from '@/components/customPic/index.vue'
 // import ChooseImg from '@/components/chooseImg/index.vue'
@@ -169,7 +169,7 @@ export default {
         CustomPic,
         warningBar
     },
-    mixins: [infoList],
+    // mixins: [infoList],
     data() {
         return {
             total: 2,

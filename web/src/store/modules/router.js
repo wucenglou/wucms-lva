@@ -11,12 +11,13 @@ const formatRouter = (routes, routeMap) => {
         if ((!item.children || item.children.every(ch => ch.hidden)) && item.name !== '404' && !item.hidden) {
             routerListArr.push({ label: item.meta.title, value: item.name })
         }
+        item.meta.btns = item.btns
         item.meta.hidden = item.hidden
         routeMap[item.name] = item
         if (item.children && item.children.length > 0) {
             formatRouter(item.children, routeMap)
         }
-    });
+    })
 }
 
 const KeepAliveFilter = (routes) => {
@@ -30,7 +31,7 @@ const KeepAliveFilter = (routes) => {
         if (item.children && item.children.length > 0) {
             KeepAliveFilter(item.children)
         }
-    });
+    })
 }
 
 export const useRouterStore = defineStore('router', () => {
@@ -57,8 +58,18 @@ export const useRouterStore = defineStore('router', () => {
             hidden: true,
             meta: {
                 title: '迷路了*。*',
+                closeTab: true,
             },
             component: 'views/error/index.vue'
+        }, {
+            path: 'reload',
+            name: 'Reload',
+            hidden: true,
+            meta: {
+                title: '',
+                closeTab: true,
+            },
+            component: 'views/error/reload.vue'
         })
         formatRouter(asyncRouter, routeMap)
         baseRouter[0].children = asyncRouter
@@ -67,6 +78,10 @@ export const useRouterStore = defineStore('router', () => {
             redirect: '/layout/404'
         })
         asyncRouterHandle(baseRouter)
+
+        console.log('asyncRouter')
+        console.log(asyncRouter)
+
         KeepAliveFilter(asyncRouter)
         asyncRouters.value = baseRouter
         routerList.value = routerListArr

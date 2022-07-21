@@ -102,14 +102,14 @@
 
         <el-table-column fixed="right" label="操作" width="100">
           <template #default="scope">
-            <!-- <el-button type="text" @click="onSubmit('edit', scope.row.id, scope.row, 'check')">预览</el-button> -->
-            <!-- <el-button type="text" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button> -->
-            <!-- <el-button type="text" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
+            <!-- <el-button type="primary" @click="onSubmit('edit', scope.row.id, scope.row, 'check')">预览</el-button> -->
+            <!-- <el-button type="primary" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button> -->
+            <!-- <el-button type="primary" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
             <!-- <el-button
               type="danger"
               @click="onSubmit('delete', scope.row.id, scope.row)"
             >删除</el-button> -->
-            <el-button type="text" @click="onSubmit('delete', scope.row.id, scope.row)">删除</el-button>
+            <el-button type="primary" @click="onSubmit('delete', scope.row.id, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +132,7 @@
 
 <script>
 export default {
-  name: 'content',
+  name: 'comment',
 }
 </script>
 

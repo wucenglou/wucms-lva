@@ -5,12 +5,8 @@
       <el-tab-pane v-for="item in historys" :key="name(item)" :label="item.meta.title" :name="name(item)" :tab="item"
         class="gva-tab">
         <template #label>
-          <span :tab="item" :style="{
-            color: activeValue === name(item) ? userStore.activeColor : '#333',
-          }"><i class="dot" :style="{
-  backgroundColor:
-    activeValue === name(item) ? userStore.activeColor : '#ddd',
-}" />
+          <span :tab="item" :style="{ color: activeValue === name(item) ? userStore.activeColor : '#333', }"><i
+              class="dot" :style="{ backgroundColor: activeValue === name(item) ? userStore.activeColor : '#ddd', }" />
             {{ fmtTitle(item.meta.title, item) }}</span>
         </template>
       </el-tab-pane>

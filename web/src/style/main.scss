@@ -8,6 +8,7 @@
  */
 
 @import '@/style/basics.scss';
+@import '@/style/iconfont.css';
 
 html {
     line-height: 1.15;
@@ -756,7 +757,6 @@ li {
 
             .cell {
                 color: rgba($color: #000000, $alpha: 0.85);
-                font-size: 14px;
                 line-height: 40px;
                 min-height: 40px;
             }

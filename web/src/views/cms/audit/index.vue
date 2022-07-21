@@ -100,18 +100,18 @@
           </template>
         </el-table-column>-->
 
-        <el-table-column fixed="right" label="操作" width="160">
+        <el-table-column fixed="right" label="操作" width="190">
           <template #default="scope">
             <el-button
               size="small"
-              type="text"
+              type="primary"
               @click="onSubmit('edit', scope.row.id, scope.row, 'check')"
             >预览</el-button>
-            <el-button type="text" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button>
-            <!-- <el-button type="text" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
+            <el-button type="primary" @click="onSubmit('edit', scope.row.id, scope.row)">编辑</el-button>
+            <!-- <el-button type="primary" @click="onSubmit('add', scope.row.id)">添加子栏目</el-button> -->
             <el-button
               size="small"
-              type="text"
+              type="primary"
               @click="onSubmit('delete', scope.row.id, scope.row)"
             >删除</el-button>
           </template>

@@ -12,7 +12,7 @@
                   <el-icon class="icon">
                     <sort />
                   </el-icon>
-                  今日流量 (1231231)
+                  今日流量d (1231231)
                 </div>
               </el-col>
               <el-col :span="8" :xs="24" :sm="8">

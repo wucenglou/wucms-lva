@@ -16,17 +16,17 @@
                 <el-table-column label="模型路径" min-width="260" prop="component" />
                 <el-table-column label="模型描述" min-width="300" prop="desc" />
                 <el-table-column label="排序" min-width="80" prop="sort" />
-                <el-table-column fixed="right" label="操作" width="160">
+                <el-table-column fixed="right" label="操作" width="230">
                     <template #default="scope">
                         <el-button
-                            type="text"
+                            type="primary"
                             @click="openDialog('edit', scope.row.id, scope.row)"
                         >编辑</el-button>
                         <el-button
-                            type="text"
+                            type="primary"
                             @click="openDialog('add', scope.row.id)"
                         >添加子模型</el-button>
-                        <el-button type="text" @click="deleteMode(scope.row.id)">删除</el-button>
+                        <el-button type="primary" @click="deleteMode(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

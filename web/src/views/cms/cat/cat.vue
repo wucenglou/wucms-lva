@@ -24,11 +24,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed="right" label="操作" width="160">
+        <el-table-column fixed="right" label="操作" width="230">
           <template #default="scope">
-            <el-button type="text" @click="openDialog('edit', scope.row.id, scope.row)">编辑</el-button>
-            <el-button type="text" @click="openDialog('add', scope.row.id)">添加子栏目</el-button>
-            <el-button type="text" @click="deleteCat(scope.row.id)">删除</el-button>
+            <el-button type="primary" @click="openDialog('edit', scope.row.id, scope.row)">编辑</el-button>
+            <el-button type="primary" @click="openDialog('add', scope.row.id)">添加子栏目</el-button>
+            <el-button type="primary" @click="deleteCat(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -41,25 +41,15 @@
             <warning-bar title="注：默认name和path相同" />
 
             <el-form-item label="选择模型" :label-width="formLabelWidth">
-              <el-cascader
-                v-model="form.modeId"
-                :disabled="dialogType == 'edit'"
-                :options="modeOption"
+              <el-cascader v-model="form.modeId" :disabled="dialogType == 'edit'" :options="modeOption"
                 :props="{ checkStrictly: true, label: 'name', value: 'id', disabled: 'disabled', emitPath: false }"
-                :show-all-levels="false"
-                filterable
-              />
+                :show-all-levels="false" filterable />
             </el-form-item>
-            
+
             <el-form-item label="上级栏目" :label-width="formLabelWidth">
-              <el-cascader
-                v-model="form.parentId"
-                :disabled="dialogType == 'add'"
-                :options="catOption"
+              <el-cascader v-model="form.parentId" :disabled="dialogType == 'add'" :options="catOption"
                 :props="{ checkStrictly: true, label: 'metaTitle', value: 'id', disabled: 'disabled', emitPath: false }"
-                :show-all-levels="false"
-                filterable
-              />
+                :show-all-levels="false" filterable />
             </el-form-item>
 
             <el-form-item label="栏目名称" prop="metaTitle" :label-width="formLabelWidth">
@@ -106,15 +96,8 @@
           </el-tab-pane>
 
           <el-tab-pane label="Banner管理">
-            <el-upload
-              ref="uploadRef"
-              class="upload-demo"
-              :data="filesinfo"
-              :on-change="onUploadChange"
-              :file-list="fileList"
-              action="/api/uploadimgs"
-              :auto-upload="false"
-            >
+            <el-upload ref="uploadRef" class="upload-demo" :data="filesinfo" :on-change="onUploadChange"
+              :file-list="fileList" action="/api/uploadimgs" :auto-upload="false">
               <template #trigger>
                 <el-button type="primary">选择图片</el-button>
               </template>
@@ -177,7 +160,9 @@ import { watch, ref, onMounted, onUnmounted } from 'vue'
 import { getModeList } from '@/api/mode'
 import { getCatList, postCatMenu, editCatMenu, deleteCatMenu } from '@/api/cat'
 import warningBar from '@/components/warningBar/warningBar.vue';
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
+
+console.log('cat')
 
 const dialogFormVisible = ref(false)
 const formLabelWidth = '90px'
@@ -203,6 +188,7 @@ const form = ref({
 
   menuId: '0'
 })
+console.log('cat+++++++++++')
 const initForm = () => {
   if (CatForm.value) {
     CatForm.value.resetFields()
@@ -359,7 +345,7 @@ const enterDialog = async () => {
       switch (type.value) {
         case 'add':
           {
-            
+
             const res = await postCatMenu(form.value)
             if (res.code === 0) {
               ElMessage({
@@ -379,7 +365,7 @@ const enterDialog = async () => {
             if (res.code === 0) {
               ElMessage({
                 type: 'success',
-                message: res.msg,
+                message: '22222'.res.msg,
                 showClose: true
               })
               await getTableData()

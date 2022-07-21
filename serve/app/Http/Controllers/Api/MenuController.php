@@ -205,7 +205,7 @@ class MenuController extends Controller
                 $meta['closeTab'] = $Menu[$i]['close_tab'];
                 $meta['defaultMenu'] = $Menu[$i]['default_menu'];
                 $meta['icon'] = $Menu[$i]['icon'];
-                $meta['keepAlive'] = $Menu[$i]['keep_alive'];
+                $meta['keepAlive'] = $Menu[$i]['keep_alive'] ? true : false;
                 $meta['title'] = $Menu[$i]['title'];
 
                 $items[$i]['id'] = (string)$Menu[$i]['id'];
