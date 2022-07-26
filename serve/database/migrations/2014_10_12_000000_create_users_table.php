@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('base_color')->default("#fff");
             $table->string('active_color')->default("#1890ff");
             $table->string('email')->nullable();
-            $table->string('phone_num',50)->nullable()->comment('账户绑定的手机号');
+            $table->string('phone',50)->nullable()->comment('账户绑定的手机号');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('last_ip')->nullable();

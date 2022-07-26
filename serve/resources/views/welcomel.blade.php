@@ -31,6 +31,9 @@
             }
         }
     </script>
+    <script src="https://unpkg.com/vue"></script>
+    <!-- 会使用最新版本，你最好指定一个版本 -->
+    <script src="https://unpkg.com/naive-ui"></script>
 </head>
 
 <body>
@@ -297,6 +300,20 @@
             <p>Powered By WUCMS内容管理系统</p>
         </div>
     </div>
+
+    <n-button> @{{ message }}</n-button>
+    <script>
+      const App = {
+        setup() {
+          return {
+            message: 'naive'
+          }
+        }
+      }
+      const app = Vue.createApp(App)
+      app.use(naive)
+      app.mount('#app')
+    </script>
 </body>
 
 </html>

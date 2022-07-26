@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 
 use App\Http\Controllers\Common\FileController;
-
+use App\Models\PostArticle;
 use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +28,19 @@ use Illuminate\Support\Facades\Auth;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('test', function () {
+    $posts = PostArticle::orderBy('created_at', 'desc')->paginate(100);
+    $topics = [];
+    foreach ($posts as $post) {
+        // foreach($post->user as $user){
+        // print_r($user);
+        // }
+        print_r($post->user->real_name);
+        print_r("-----++++++++++-----");
+    }
+    // return '6666';
+});
 
 Route::prefix('admin')->group(function () {
 });

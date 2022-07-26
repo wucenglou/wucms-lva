@@ -32,7 +32,6 @@ class PostDynamic extends Model
     protected $hidden = [
         'updated_at',
         'created_at',
-        'user',
         'mode',
         'cat'
     ];

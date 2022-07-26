@@ -9,35 +9,42 @@ class PostArticle extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'menu_level',
-        'cat_id',
-        'user_id',
-        'mode_id',
-        'status',
-        'title',
-        'keywords',
-        'description',
-        'content',
-        'flag',
+    protected $guarded = []; //不可以注入字段
 
-        'sort',
-        'page_views',
-        'praise_num',
-        'trample_num',
-        'forward_num',
-        'extend'
-    ];
+    // protected $fillable = [
+    //     'menu_level',
+    //     'cat_id',
+    //     'user_id',
+    //     'mode_id',
+    //     'status',
+    //     'title',
+    //     'keywords',
+    //     'description',
+    //     'content',
+    //     'flag',
+
+    //     'sort',
+    //     'page_views',
+    //     'praise_num',
+    //     'trample_num',
+    //     'forward_num',
+    //     'extend'
+    // ];
 
     protected $hidden = [
-        'user',
         'mode',
         'cat'
     ];
 
+
+    public function userweb()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, "id", "user_id");
     }
 
     public function mode()

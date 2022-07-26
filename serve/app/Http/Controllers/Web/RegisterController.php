@@ -13,13 +13,27 @@ class RegisterController extends Controller
     // 注册页面
     public function index()
     {
+        // $request->validate([
+        //     'username' => 'required|string',
+        //     'realName' => 'nullable',
+        //     'password' => 'required|string'
+        // ]);
+        // $user = new User([
+        //     'username' => $request->username,
+        //     'real_name' => $request->realName,
+        //     'uuid' => Str::uuid(),
+        //     'password' => bcrypt($request->password)
+        // ]);
+        // $user->save();
+        // $user = $this->adapterUser($user);
+
         return view('register/index');
     }
 
     public function register()
     {
         $this->validate(request(), [
-            'username' => 'required|min:3|unique:users,username',
+            'username' => 'required|min:2|unique:users,username',
             'email' => 'required|unique:users,email|email',
             'password' => 'required|min:5|confirmed',
         ]);
@@ -30,5 +44,6 @@ class RegisterController extends Controller
         $uuid = Str::uuid();
         $user = User::create(compact('username', 'email','uuid', 'password'));
         return redirect('/login');
+
     }
 }

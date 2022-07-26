@@ -67,7 +67,6 @@ class UserController extends Controller
     public function setUserAuthority()
     {
         $res = request();
-
         $user = Auth::guard('api')->user();
         $arr = $user->authorities;
         foreach ($arr as $v) {
@@ -129,7 +128,7 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string',
-            'realName' => 'required|string',
+            'realName' => 'nullable',
             'password' => 'required|string'
         ]);
         $user = new User([
@@ -172,6 +171,7 @@ class UserController extends Controller
         foreach ($users as $k => $user) {
             $res[$k]['authorities'] = $this->toHump($user->authorities->toArray());
             $res[$k]['authority'] = $res[$k]['authorities']['0'] ?? '';
+            // $res[$k]['avatarUrl'] = $res[$k]['avatarUrl'] ? env('APP_URL'). $res[$k]['avatar_url'] : '';
         }
         return response()->json([
             'code' => 0, 'data' => [

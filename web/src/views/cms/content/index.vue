@@ -40,11 +40,11 @@
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button @click="onSubmit('add', 0)" type="primary">添加内容</el-button>
+        <el-button @click="onSubmit('add', 0)" type="primary">新增</el-button>
         <!-- <el-button @click="onSubmit('deleteids', 0)" type="danger">批量删除</el-button> -->
         <el-select
           v-model="statusType"
-          placeholder="Select"
+          placeholder="批量操作"
           style="width:10rem;margin-right: 1rem;margin-left: 1rem;"
         >
           <el-option
@@ -54,7 +54,7 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-button @click="onSubmit('batch', 0)" type="primary">批量操作</el-button>
+        <el-button @click="onSubmit('batch', 0)" type="primary">应用</el-button>
       </div>
       <el-table
         :data="tableDataPost"

@@ -59,13 +59,13 @@
                             <p>确定要删除此用户吗</p>
                             <div style="text-align: right; margin-top: 8px;">
                                 <el-button type="primary" @click="scope.row.visible = false">取消</el-button>
-                                <el-button type="primary" @click="deleteUser(scope.row)">确定</el-button>
+                                <el-button type="primary" @click="deleteUserFunc(scope.row)">确定</el-button>
                             </div>
                             <template #reference>
                                 <el-button type="primary" icon="delete">删除</el-button>
                             </template>
                         </el-popover>
-                        <el-button type="primary" icon="magic-stick" @click="resetPassword(scope.row)">重置密码</el-button>
+                        <el-button type="primary" icon="magic-stick" @click="resetPasswordFunc(scope.row)">重置密码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -83,7 +83,7 @@
                 <el-form-item label="密码" prop="password">
                     <el-input v-model="userInfo.password" />
                 </el-form-item>
-                <el-form-item label="真实姓名" prop="realkName">
+                <el-form-item label="真实姓名" prop="realName">
                     <el-input v-model="userInfo.realName" />
                 </el-form-item>
                 <el-form-item label="用户角色" prop="authorityId">
@@ -131,8 +131,8 @@ import CustomPic from '@/components/customPic/index.vue'
 // import ChooseImg from '@/components/chooseImg/index.vue'
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { setUserInfo, resetPassword } from '@/api/user.js'
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, watch, nextTick } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const rules = ref({
     username: [
@@ -144,7 +144,7 @@ const rules = ref({
         { min: 6, message: '最低6位字符', trigger: 'blur' }
     ],
     realName: [
-        { required: true, message: '请输入用户真实姓名', trigger: 'blur' }
+        { required: false, message: '请输入用户真实姓名', trigger: 'blur' },
     ],
     authorityId: [
         { required: true, message: '请选择用户角色', trigger: 'blur' }
@@ -175,10 +175,20 @@ const optionsBatch = ref([
 
 const page = ref(1)
 const total = ref(0)
-const pageSize = ref(999)
+const pageSize = ref(10)
 const tableData = ref([])
 const searchInfo = ref({})
+// 分页
+const handleSizeChange = (val) => {
+    pageSize.value = val
+    getTableData
+}
 
+const handleCurrentChange = (val) => {
+    page.value = val
+    getTableData()
+}
+// 查询
 const getTableData = async () => {
     const table = await getUserList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
     console.log(table)
@@ -191,12 +201,62 @@ const getTableData = async () => {
 }
 getTableData()
 
-const addUserDialog = ref(false)
-const addUser = () => {
-    addUserDialog = true
+watch(() => tableData.value, () => {
+    setAuthorityIds()
+})
+
+const setAuthorityIds = () => {
+    tableData.value && tableData.value.forEach((user) => {
+        const authorityIds = user.authorities && user.authorities.map(i => {
+            return i.authorityId
+        })
+        user.authorityIds = authorityIds
+    })
 }
 
-const enterAddUserDialog = async() => {
+const initPage = async () => {
+    getTableData()
+    const res = await getAuthorityList({ page: 1, pageSize: 999 })
+    setOptions(res.data.list)
+}
+
+initPage()
+
+const authOptions = ref([])
+const setOptions = (authData) => {
+    authOptions.value = []
+    setAuthorityOptions(authData, authOptions.value)
+}
+
+const setAuthorityOptions = (AuthorityData, optionsData) => {
+    AuthorityData &&
+        AuthorityData.forEach(item => {
+            if (item.children && item.children.length) {
+                const option = {
+                    authorityId: item.authorityId,
+                    authorityName: item.authorityName,
+                    disabled: item.disabled,
+                    children: []
+                }
+                setAuthorityOptions(item.children, option.children)
+                optionsData.push(option)
+            } else {
+                const option = {
+                    authorityId: item.authorityId,
+                    authorityName: item.authorityName,
+                    disabled: item.disabled,
+                }
+                optionsData.push(option)
+            }
+        })
+}
+
+const addUserDialog = ref(false)
+const addUser = () => {
+    addUserDialog.value = true
+}
+const userForm = ref(null)
+const enterAddUserDialog = async () => {
     userInfo.value.authorityId = userInfo.value.authorityIds[0]
     userForm.value.validate(async valid => {
         if (valid) {
@@ -220,6 +280,96 @@ const closeAddUserDialog = () => {
     addUserDialog.value = false
 }
 
+const optionType = ref('')
+
+const onSubmit = async (key) => {
+    console.log(optionType.value)
+    console.log(optionIds.value)
+    const res = await optionUser({ option: optionType.value, userIds: optionIds.value })
+    if (res.code === 0) {
+        ElMessage({
+            type: 'success',
+            message: "操作成功"
+        })
+    }
+    initPage()
+}
+
+const optionIds = ref([])
+const handleSelectionChange = (val) => {
+    optionIds.value = []
+    val.forEach(item => {
+        optionIds.value.push(item.id)
+    })
+}
+
+// 改变角色
+const changeAuthority = async (row, flag) => {
+    if (flag) {
+        return
+    }
+    await nextTick()
+    const res = await setUserAuthorities({
+        id: row.id,
+        authorityIds: row.authorityIds
+    })
+    if (res.code === 0) {
+        ElMessage({ type: 'success', message: '角色设置成功' })
+    }
+}
+
+// 重置密码
+const resetPasswordFunc = (row) => {
+    ElMessageBox.confirm(
+        '是否将此用户密码重置为123456?',
+        '警告',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    ).then(async () => {
+        const res = await resetPassword({
+            ID: row.ID,
+        })
+        console.log(res)
+        if (res.code === 0) {
+            ElMessage({
+                type: 'success',
+                message: res.msg,
+            })
+        } else {
+            // ElMessage({
+            //     type: 'error',
+            //     message: res.msg,
+            // })
+        }
+    })
+}
+// 编辑昵称/姓名
+const backNickName = ref('')
+const openEidt = (row) => {
+    if (tableData.value.some(item => item.editFlag)) {
+        ElMessage('当前存在正在编辑的用户')
+        return
+    }
+    backNickName.value = row.realName
+    row.editFlag = true
+}
+const closeEdit = (row) => {
+    row.realName = backNickName.value
+    backNickName.value = ''
+    row.editFlag = false
+}
+
+const deleteUserFunc = async(row) => {
+    const res = await deleteUser({ id: row.id })
+    if (res.code === 0) {
+        ElMessage({ message: '删除成功',type: 'success'})
+        await getTableData()
+        row.visible = false
+    }
+}
 
 </script>
 
@@ -232,92 +382,16 @@ export default {
             path: path,
             authOptions: [],
             backNickName: '',
-            optionType: '',
-            optionIds: [],
         }
-    },
-    // computed: {
-    //     ...mapGetters('user', ['token'])
-    // },
-    watch: {
-        tableData() {
-            this.setAuthorityIds()
-        }
-    },
-    async created() {
-        const res = await getAuthorityList({ page: 1, pageSize: 999 })
-        console.log('77')
-        console.log(res.data.list)
-        this.setOptions(res.data.list)
     },
     methods: {
-        async onSubmit(key) {
-            console.log(this.optionType)
-            console.log(this.optionIds)
-            const res = await optionUser({ option: this.optionType, userIds: this.optionIds })
-            if (res.code === 0) {
-                this.$message({
-                    type: 'success',
-                    message: "操作成功"
-                })
-                this.setOptions(res.data.list)
-            }
-        },
-        handleSelectionChange(val) {
-            this.optionIds = []
-            val.forEach(item => {
-                this.optionIds.push(item.id)
-            })
-        },
-        resetPassword(row) {
-            this.$confirm(
-                '是否将此用户密码重置为123456?',
-                '警告',
-                {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                }
-            ).then(async () => {
-                const res = await resetPassword({
-                    id: row.id,
-                })
-                if (res.code === 0) {
-                    this.$message({
-                        type: 'success',
-                        message: res.msg,
-                    })
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: res.msg,
-                    })
-                }
-            })
-        },
-        setAuthorityIds() {
-            this.tableData && this.tableData.forEach((user) => {
-                const authorityIds = user.authorities && user.authorities.map(i => {
-                    return i.authorityId
-                })
-                user.authorityIds = authorityIds
-            })
-        },
+        
+        
         openHeaderChange() {
             this.$refs.chooseImg.open()
         },
-        setOptions(authData) {
-            this.authOptions = []
-            this.setAuthorityOptions(authData, this.authOptions)
-        },
-        openEidt(row) {
-            if (this.tableData.some(item => item.editFlag)) {
-                this.$message('当前存在正在编辑的用户')
-                return
-            }
-            this.backNickName = row.realName
-            row.editFlag = true
-        },
+        ,
+        ,
         async enterEdit(row) {
             const res = await setUserInfo({ realName: row.realName, id: row.id })
             if (res.code === 0) {
@@ -328,58 +402,6 @@ export default {
             }
             this.backNickName = ''
             row.editFlag = false
-        },
-        closeEdit(row) {
-            row.realName = this.backNickName
-            this.backNickName = ''
-            row.editFlag = false
-        },
-        setAuthorityOptions(AuthorityData, optionsData) {
-            AuthorityData &&
-                AuthorityData.forEach(item => {
-                    if (item.children && item.children.length) {
-                        const option = {
-                            authorityId: item.authorityId,
-                            authorityName: item.authorityName,
-                            disabled: item.disabled,
-                            children: []
-                        }
-                        this.setAuthorityOptions(item.children, option.children)
-                        optionsData.push(option)
-                    } else {
-                        const option = {
-                            authorityId: item.authorityId,
-                            authorityName: item.authorityName,
-                            disabled: item.disabled,
-                        }
-                        optionsData.push(option)
-                    }
-                })
-        },
-        async deleteUser(row) {
-            const res = await deleteUser({ id: row.id })
-            if (res.code === 0) {
-                this.$message.success('删除成功')
-                await this.getTableData()
-                row.visible = false
-            }
-        },
-        
-        
-        
-        async changeAuthority(row, flag) {
-            if (flag) {
-                return
-            }
-            this.$nextTick(async () => {
-                const res = await setUserAuthorities({
-                    id: row.id,
-                    authorityIds: row.authorityIds
-                })
-                if (res.code === 0) {
-                    this.$message({ type: 'success', message: '角色设置成功' })
-                }
-            })
         },
     }
 }

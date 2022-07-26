@@ -20,7 +20,8 @@ use App\Http\Controllers\Web\RegisterController;
 |
 */
 
-Route::get('/', [PostController::class, 'index']);
+Route::get('/', [IndexController::class, 'index']);
+// Route::get('/', [PostController::class, 'index']);
 
 //登录页面   
 Route::get('/login', [AuthController::class, 'index']);
@@ -42,6 +43,8 @@ Route::get('/posts/{post}', [PostController::class, 'show']);
 Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
 Route::put('/posts/{post}', [PostController::class, 'update']);
 Route::get('/posts/{post}/delete', [PostController::class, 'delete']);
+
+Route::get('/c/{cat}/{name}', [PostController::class, 'cat']);
 
 Route::post('/posts/image/upload', [PostController::class, 'imageUpload']);
 

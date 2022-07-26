@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,16 +22,19 @@ class User extends Authenticatable
      *
      * @var string[]
      */
-    protected $fillable = [
-        'username',
-        'uuid',
-        'real_name',
-        'avatar_url',
-        'email',
-        'password',
-        'phone_num',
-        'status'
-    ];
+    // protected $fillable = [
+    //     'username',
+    //     'uuid',
+    //     'real_name',
+    //     'avatar_url',
+    //     'email',
+    //     'password',
+    //     'phone',
+    //     'status'
+    // ];
+
+    protected $guarded = []; //不可以注入字段
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -39,8 +42,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'updated_at',
-        'created_at',
         'password',
         'remember_token',
     ];

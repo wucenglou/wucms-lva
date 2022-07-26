@@ -12,7 +12,7 @@ class CommentController extends Controller
     //
     public function getComments(Comment $comment)
     {
-        $r = request();
+        // $r = request();
         // dd($r);
         // 当前页 前端传过来
         $cur_page = request('page');
@@ -27,8 +27,8 @@ class CommentController extends Controller
         foreach($res as $re){
             $re['mode_name'] = $re->mode->name;
             $re['cat_name'] = $re->cat->meta_title;
-            $re['title'] = $re->post->title;
-            $re['author_name'] = $re->user->username;
+            $re['title'] = $re->post->title ?? '文章已删除';
+            $re['author_name'] = $re->user->username ?? '此用户已注销';
         }
 
         return $this->response([

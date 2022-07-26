@@ -2,37 +2,32 @@
   <el-container class="layout-cont">
     <el-container :class="[isSider ? 'openside' : 'hideside', isMobile ? 'mobile' : '']">
       <el-row :class="[isShadowBg ? 'shadowBg' : '']" @click="changeShadow()" />
-      <el-aside class="main-cont main-left">
+      <el-aside class="main-cont main-left gva-aside">
         <div class="tilte" :style="{ background: backgroundColor }">
           <img alt class="logoimg" :src="$WUCMS_VUE.appLogo">
-          <h2 v-if="isSider" class="tit-text" :style="{ color: textColor }">{{ $WUCMS_VUE.appName }}</h2>
+          <div v-if="isSider" class="tit-text" :style="{ color: textColor }">{{ $WUCMS_VUE.appName }}</div>
         </div>
         <Aside class="aside" />
       </el-aside>
       <!-- 分块滑动功能 -->
       <el-main class="main-cont main-right">
-        <transition :duration="{ enter: 400, leave: 100 }" mode="out-in" name="el-fade-in-linear">
+        <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
           <div :style="{ width: `calc(100% - ${isMobile ? '0px' : isCollapse ? '54px' : '220px'})` }" class="topfix">
             <el-row>
-              <!-- :xs="8" :sm="6" :md="4" :lg="3" :xl="1" -->
               <el-col>
                 <el-header class="header-cont">
                   <el-row class="pd-0">
                     <el-col :xs="2" :lg="1" :md="1" :sm="1" :xl="1" style="z-index:100">
                       <div class="menu-total" @click="totalCollapse">
-                        <el-icon v-if="isCollapse" size="24">
-                          <expand />
-                        </el-icon>
-                        <el-icon v-else size="24">
-                          <fold />
-                        </el-icon>
+                        <div v-if="isCollapse" class="gvaIcon gvaIcon-arrow-double-right" />
+                        <div v-else class="gvaIcon gvaIcon-arrow-double-left" />
                       </div>
                     </el-col>
                     <el-col :xs="10" :lg="14" :md="14" :sm="9" :xl="14" :pull="1">
                       <el-breadcrumb class="breadcrumb">
                         <el-breadcrumb-item v-for="item in matched.slice(1, matched.length)" :key="item.path">{{
                           fmtTitle(item.meta.title, route)
-                        }}</el-breadcrumb-item>
+                          }}</el-breadcrumb-item>
                       </el-breadcrumb>
                     </el-col>
                     <el-col :xs="12" :lg="9" :md="9" :sm="14" :xl="9">
@@ -41,8 +36,8 @@
                         <el-dropdown>
                           <div class="dp-flex justify-content-center align-items height-full width-full">
                             <span class="header-avatar" style="cursor: pointer">
-                              <CustomPic />
-                              <span style="margin-left: 5px">{{ userStore.userInfo.username }}</span>
+                              <!-- <CustomPic /> -->
+                              <span style="margin-left: 5px">{{ userStore.userInfo.nickName }}</span>
                               <el-icon>
                                 <arrow-down />
                               </el-icon>
@@ -81,13 +76,16 @@
             <HistoryComponent ref="layoutHistoryComponent" />
           </div>
         </transition>
-        <router-view v-if="reloadFlag" v-slot="{ Component }" v-loading="loadingFlag" element-loading-text="正在加载中"
-          class="admin-box">
+        <router-view v-if="reloadFlag" v-slot="{ Component, route }" v-loading="loadingFlag"
+          element-loading-text="正在加载中" class="admin-box">
+          <!-- <div :key="route.name"> -->
+          <div>
           <transition mode="out-in" name="el-fade-in-linear">
             <keep-alive :include="routerStore.keepAliveRouters">
               <component :is="Component" />
             </keep-alive>
           </transition>
+          </div>
         </router-view>
         <!-- <BottomInfo /> -->
         <setting />
@@ -102,16 +100,18 @@ export default {
   name: 'Layout',
 }
 </script>
+
 <script setup>
 import Aside from '@/views/layout/aside/index.vue'
 import HistoryComponent from '@/views/layout/aside/historyComponent/history.vue'
 import Search from '@/views/layout/search/search.vue'
-import CustomPic from '@/components/customPic/index.vue'
+// import BottomInfo from '@/views/layout/bottomInfo/bottomInfo.vue'
+// import CustomPic from '@/components/customPic/index.vue'
 import Setting from './setting/index.vue'
 import { setUserAuthority } from '@/api/user'
 import { emitter } from '@/utils/bus.js'
 import { computed, ref, onMounted, nextTick } from 'vue'
-import { useRouter, useRoute} from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { useRouterStore } from '@/store/modules/router'
 import { fmtTitle } from '@/utils/fmtRouterTitle'
@@ -122,7 +122,6 @@ const routerStore = useRouterStore()
 
 console.log('routerStore.keepAliveRouters')
 console.log(routerStore.keepAliveRouters)
-
 // 三种窗口适配
 const isCollapse = ref(false)
 const isSider = ref(true)
@@ -233,15 +232,13 @@ const totalCollapse = () => {
 }
 
 const toPerson = () => {
-  router.push({name: 'person'})
+  router.push({ name: 'person' })
 }
-
 const changeShadow = () => {
   isShadowBg.value = !isShadowBg.value
   isSider.value = !!isCollapse.value
   totalCollapse()
 }
-
 </script>
 
 <style lang="scss">

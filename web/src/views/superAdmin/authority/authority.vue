@@ -16,11 +16,11 @@
           </template>
         </el-table-column>
         <el-table-column align="left" label="角色描述" min-width="100" prop="authorityDescribe" />
-        <el-table-column align="left" label="操作" width="360">
+        <el-table-column align="left" label="操作" width="450">
           <template #default="scope">
             <el-button icon="setting" type="primary" @click="opdendrawer(scope.row)">设置权限</el-button>
             <el-button icon="plus" type="primary" @click="addAuthority(scope.row.authorityId)">新增子角色</el-button>
-            <el-button icon="copy-document" type="primary" @click="copyAuthority(scope.row)">拷贝</el-button>
+            <el-button icon="copy-document" type="primary" @click="copyAuthorityFunc(scope.row)">拷贝</el-button>
             <el-button icon="edit" type="primary" @click="editAuthority(scope.row)">编辑</el-button>
             <el-button icon="delete" type="primary" @click="deleteAuth(scope.row)">删除</el-button>
           </template>
@@ -158,253 +158,211 @@ const changeRow = (key, value) => {
   activeRow.value[key] = value
 }
 const menus = ref(null)
+const apis = ref(null)
+const datas = ref(null)
 
-
-
-
-
-</script>
-
-<!-- <script>
-
-import infoList from '@/mixins/infoList'
-export default {
-  name: 'Authority',
-  components: {
-    Menus,
-    Apis,
-    // Datas,
-    warningBar
-  },
-  mixins: [infoList],
-  data() {
-    var mustUint = (rule, value, callback) => {
-      if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
-        return callback(new Error('请输入正整数'))
-      }
-      return callback()
-    }
-
-    return {
-      
-      listApi: getAuthorityList,
-      
-      activeUserId: 0,
-      
-      
-    }
-  },
-  async created() {
-    this.pageSize = 999
-    await this.getTableData()
-  },
-  methods: {
-    changeRow(key, value) {
-      this.activeRow[key] = value
-    },
-    autoEnter(activeName, oldActiveName) {
-      const paneArr = ['menus', 'apis', 'datas']
-      if (oldActiveName) {
-        if (this.$refs[paneArr[oldActiveName]].needConfirm) {
-          this.$refs[paneArr[oldActiveName]].enterAndNext()
-          this.$refs[paneArr[oldActiveName]].needConfirm = false
-        }
-      }
-    },
-    // 拷贝角色
-    copyAuthority(row) {
-      this.setOptions()
-      this.dialogTitle = '拷贝角色'
-      this.dialogType = 'copy'
-      for (const k in this.form) {
-        this.form[k] = row[k]
-      }
-      this.copyForm = row
-      this.dialogFormVisible = true
-    },
-    opdendrawer(row) {
-      this.drawer = true
-      this.activeRow = row
-    },
-    // 删除角色
-    deleteAuth(row) {
-      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          const res = await deleteAuthority({ authorityId: row.authorityId })
-          if (res.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            if (this.tableData.length === 1 && this.page > 1) {
-              this.page--
-            }
-            this.getTableData()
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    // 初始化表单
-    initForm() {
-      if (this.$refs.authorityForm) {
-        this.$refs.authorityForm.resetFields()
-      }
-      this.form = {
-        authorityId: '',
-        authorityName: '',
-        authoritySys: 0,
-        authorityDescribe: '',
-        parentId: '0'
-      }
-    },
-    // 关闭窗口
-    closeDialog() {
-      this.initForm()
-      this.dialogFormVisible = false
-      this.apiDialogFlag = false
-    },
-    // 确定弹窗
-
-    async enterDialog() {
-      if (this.form.authorityId === '0') {
-        this.$message({
-          type: 'error',
-          message: '角色id不能为0'
-        })
-        return false
-      }
-
-      this.$refs.authorityForm.validate(async valid => {
-        if (valid) {
-          switch (this.dialogType) {
-            case 'add':
-              {
-                const res = await createAuthority(this.form)
-                if (res.code === 0) {
-                  this.$message({
-                    type: 'success',
-                    message: '添加成功!'
-                  })
-                  this.getTableData()
-                  this.closeDialog()
-                }
-              }
-              break
-            case 'edit':
-              {
-                const res = await updateAuthority(this.form)
-                if (res.code === 0) {
-                  this.$message({
-                    type: 'success',
-                    message: '编辑成功!'
-                  })
-                  this.getTableData()
-                  this.closeDialog()
-                }
-              }
-              break
-            case 'copy': {
-              const data = {
-                authority: {
-                  authorityId: 'string',
-                  authorityName: 'string',
-                  datauthorityId: [],
-                  parentId: 'string'
-                },
-                oldAuthorityId: 0
-              }
-              data.authority.authorityId = this.form.authorityId
-              data.authority.authorityName = this.form.authorityName
-              data.authority.authoritySys = this.form.authoritySys
-              data.authority.authorityDescribe = this.form.authorityDescribe
-              data.authority.parentId = this.form.parentId
-              data.authority.dataAuthorityId = this.copyForm.dataAuthorityId
-              data.oldAuthorityId = this.copyForm.authorityId
-              const res = await copyAuthority(data)
-              if (res.code === 0) {
-                this.$message({
-                  type: 'success',
-                  message: '复制成功！'
-                })
-                this.getTableData()
-              }
-            }
-          }
-
-          this.initForm()
-          this.dialogFormVisible = false
-        }
-      })
-    },
-    setOptions() {
-      this.AuthorityOption = [
-        {
-          authorityId: '0',
-          authorityName: '根角色'
-        }
-      ]
-      this.setAuthorityOptions(this.tableData, this.AuthorityOption, false)
-    },
-    setAuthorityOptions(AuthorityData, optionsData, disabled) {
-      this.form.authorityId = String(this.form.authorityId)
-      console.log(AuthorityData)
-      AuthorityData &&
-        AuthorityData.forEach(item => {
-          if (item.children && item.children.length) {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === this.form.authorityId,
-              children: []
-            }
-            this.setAuthorityOptions(
-              item.children,
-              option.children,
-              disabled || item.authorityId === this.form.authorityId
-            )
-            optionsData.push(option)
-          } else {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === this.form.authorityId
-            }
-            optionsData.push(option)
-          }
-        })
-    },
-    // 增加角色
-    addAuthority(parentId) {
-      this.initForm()
-      this.dialogTitle = '新增角色'
-      this.dialogType = 'add'
-      this.form.parentId = parentId
-      this.setOptions()
-      this.dialogFormVisible = true
-    },
-    // 编辑角色
-    editAuthority(row) {
-      this.setOptions()
-      this.dialogTitle = '编辑角色'
-      this.dialogType = 'edit'
-      for (const key in this.form) {
-        this.form[key] = row[key]
-      }
-      this.setOptions()
-      this.dialogFormVisible = true
+const autoEnter = (activeName, oldActiveName) => {
+  const paneArr = [menus, apis, datas]
+  if (oldActiveName) {
+    if (paneArr[oldActiveName].value.needConfirm) {
+      paneArr[oldActiveName].value.enterAndNext()
+      paneArr[oldActiveName].value.needConfirm = false
     }
   }
 }
-</script> -->
+// 拷贝角色
+const copyAuthorityFunc = (row) => {
+  setOptions()
+  dialogTitle.value = '拷贝角色'
+  dialogType.value = 'copy'
+  for (const k in form.value) {
+    form.value[k] = row[k]
+  }
+  copyForm.value = row
+  dialogFormVisible.value = true
+}
+const opdendrawer = (row) => {
+  drawer.value = true
+  activeRow.value = row
+}
+// 删除角色
+const deleteAuth = (row) => {
+  ElMessageBox.confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      const res = await deleteAuthority({ authorityId: row.authorityId })
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功!'
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
+        }
+        getTableData()
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消删除'
+      })
+    })
+}
+
+// 初始化表单
+const authorityForm = ref(null)
+const initForm = () => {
+  if (authorityForm.value) {
+    authorityForm.value.resetFields()
+  }
+  form.value = {
+    authorityId: '',
+    authorityName: '',
+    authoritySys: 0,
+    authorityDescribe: '',
+    parentId: '0'
+  }
+}
+// 关闭窗口
+const closeDialog = () => {
+  initForm()
+  dialogFormVisible.value = false
+  apiDialogFlag.value = false
+}
+// 确定弹窗
+const enterDialog = async() => {
+  form.value.authorityId = Number(form.value.authorityId)
+  if (form.value.authorityId === '0') {
+    ElMessage({
+      type: 'error',
+      message: '角色id不能为0'
+    })
+    return false
+  }
+  authorityForm.value.validate(async valid => {
+    if (valid) {
+      switch (dialogType.value) {
+        case 'add':
+          {
+            const res = await createAuthority(form.value)
+            if (res.code === 0) {
+              ElMessage({
+                type: 'success',
+                message: '添加成功!'
+              })
+              getTableData()
+              closeDialog()
+            }
+          }
+          break
+        case 'edit':
+          {
+            const res = await updateAuthority(form.value)
+            if (res.code === 0) {
+              ElMessage({
+                type: 'success',
+                message: '编辑成功!'
+              })
+              getTableData()
+              closeDialog()
+            }
+          }
+          break
+        case 'copy': {
+          const data = {
+            authority: {
+              authorityId: 'string',
+              authorityName: 'string',
+              datauthorityId: [],
+              parentId: 'string'
+            },
+            oldAuthorityId: 0
+          }
+          data.authority.authorityId = form.value.authorityId
+          data.authority.authorityName = form.value.authorityName
+          data.authority.authoritySys = form.value.authoritySys
+          data.authority.authorityDescribe = form.value.authorityDescribe
+          data.authority.parentId = form.value.parentId
+          data.authority.dataAuthorityId = copyForm.value.dataAuthorityId
+          data.oldAuthorityId = copyForm.value.authorityId
+          const res = await copyAuthority(data)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '复制成功！'
+            })
+            getTableData()
+          }
+        }
+      }
+      initForm()
+      dialogFormVisible.value = false
+    }
+  })
+}
+const setOptions = () => {
+  AuthorityOption.value = [
+    {
+      authorityId: '0',
+      authorityName: '根角色'
+    }
+  ]
+  setAuthorityOptions(tableData.value, AuthorityOption.value, false)
+}
+const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
+  form.value.authorityId = String(form.value.authorityId)
+  console.log(AuthorityData)
+  AuthorityData &&
+    AuthorityData.forEach(item => {
+      if (item.children && item.children.length) {
+        const option = {
+          authorityId: item.authorityId,
+          authorityName: item.authorityName,
+          disabled: disabled || item.authorityId === form.value.authorityId,
+          children: []
+        }
+        setAuthorityOptions(
+          item.children,
+          option.children,
+          disabled || item.authorityId === form.value.authorityId
+        )
+        optionsData.push(option)
+      } else {
+        const option = {
+          authorityId: item.authorityId,
+          authorityName: item.authorityName,
+          disabled: disabled || item.authorityId === form.value.authorityId
+        }
+        optionsData.push(option)
+      }
+    })
+}
+// 增加角色
+const addAuthority = (parentId) => {
+  initForm()
+  dialogTitle.value = '新增角色'
+  dialogType.value = 'add'
+  form.value.parentId = parentId
+  setOptions()
+  dialogFormVisible.value = true
+}
+// 编辑角色
+const editAuthority = (row) => {
+  setOptions()
+  dialogTitle.value = '编辑角色'
+  dialogType.value = 'edit'
+  for (const key in form.value) {
+    form.value[key] = row[key]
+  }
+  setOptions()
+  dialogFormVisible.value = true
+}
+</script>
+
 
 <style lang="scss">
 // .authority {

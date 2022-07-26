@@ -113,6 +113,7 @@ import {
 import { toSQLLine } from '@/utils/stringFun'
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const methodFiletr = (value) => {
   const target = methodOptions.value.filter(item => item.value === value)[0]
@@ -268,7 +269,9 @@ const closeDialog = () => {
 }
 
 const editApi = async(row) => {
-  const res = await getApiById({ id: row.ID })
+  const res = await getApiById({ id: row.id })
+  console.log('+++++++++++')
+  console.log(res)
   form.value = res.data.api
   openDialog('edit')
 }

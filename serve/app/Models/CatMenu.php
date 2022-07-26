@@ -30,6 +30,11 @@ class CatMenu extends Model
         'deleted_at'
     ];
 
+    public function posts()
+    {
+        return $this->hasMany(PostArticle::class, 'cat_id', 'id');
+    }
+
     public function modeName()
     {
         return $this->hasOne(Mode::class, 'id', 'mode_id');

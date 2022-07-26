@@ -6,19 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Fan;
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use App\Models\CatMenu;
 
 class UserController extends Controller
 {
     //
     public function show(User $user)
     {
+        $navss = CatMenu::all();
+        $navs = $this->toHumpTree($navss->toArray(), 'id', 'parent_id');
+
         $posts = $user->posts()->orderBy('created_at', 'desc')->take(5)->get();
         $user = User::withCount(['stars', 'fans', 'posts'])->find($user->id);
         $fans = $user->fans()->get();
         $stars = $user->stars()->get();
         //dd($stars);
-        return view("user/show", compact('user', 'posts', 'fans', 'stars'));
+        return view("user/show", compact('user', 'posts', 'fans', 'stars','navs'));
     }
 
     public function fan(User $user)
@@ -43,8 +46,11 @@ class UserController extends Controller
 
     public function setting($user)
     {
+        $navss = CatMenu::all();
+        $navs = $this->toHumpTree($navss->toArray(), 'id', 'parent_id');
+
         $me = \Auth::user();
-        return view('user/setting', compact('me'));
+        return view('user/setting', compact('me','navs'));
     }
 
     public function settingStore(Request $request, User $user)

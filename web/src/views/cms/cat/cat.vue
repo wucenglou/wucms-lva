@@ -1,5 +1,6 @@
 <template>
   <div>
+    <warningBar title="注：功能待完善" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button type="primary" icon="plus" @click="openDialog('add', 0)">新增根栏目</el-button>
