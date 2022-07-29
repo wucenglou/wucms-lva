@@ -30,10 +30,10 @@
           />
         </el-form-item>
         <el-form-item label="关键词搜索">
-          <el-input placeholder="搜索" />
+          <el-input v-model="searchInfo.value" placeholder="搜索" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="search">查询</el-button>
+          <el-button type="primary" icon="search" @click="onSubmit('search')">查询</el-button>
           <el-button icon="refresh">重置</el-button>
         </el-form-item>
       </el-form>
@@ -310,6 +310,10 @@ const onSubmit = async (key, id, row, type) => {
         await getTableData()
       }
       break
+    case 'search':
+      // const res_search = 
+      refreshTableData()
+      console.log("search")
     default:
       break
   }

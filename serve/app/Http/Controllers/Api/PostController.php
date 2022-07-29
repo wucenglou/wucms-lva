@@ -55,10 +55,10 @@ class PostController extends Controller
         $catIds = request('catIds');
         $status = request('status');
         $routeName = request("routeName") ?? false;
+        $value = request("value") ?? '';
         // 偏移量计算，从多少条开始算起
         $page = ($cur_page - 1) * $page_size;
         // 一共多少数据
-
         $menuInfo = explode("-", $routeName);
         if (empty($catIds) && count($menuInfo) > 2) {
             $catIds = [$menuInfo[2]];
@@ -68,19 +68,19 @@ class PostController extends Controller
         $table = DB::table('modes')->find($r['modeId'])->table;
         if (empty($catIds)) {
             if (is_null($status)) {
-                $res = PostDynamic::table($table)->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
-                $count = PostDynamic::table($table)->count();
+                $res = PostDynamic::table($table)->where('title', 'like', "%$value%")->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
+                $count = PostDynamic::table($table)->where('title', 'like', "%$value%")->count();
             } else {
-                $res = PostDynamic::table($table)->where('status', $status)->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
-                $count = PostDynamic::table($table)->where('status', $status)->count();
+                $res = PostDynamic::table($table)->where('status', $status)->where('title', 'like', "%$value%")->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
+                $count = PostDynamic::table($table)->where('status', $status)->where('title', 'like', "%$value%")->count();
             }
         } else {
             if (is_null($status)) {
-                $res = PostDynamic::table($table)->whereIn('cat_id', $catIds)->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
-                $count = PostDynamic::table($table)->whereIn('cat_id', $catIds)->count();
+                $res = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('title', 'like', "%$value%")->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
+                $count = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('title', 'like', "%$value%")->count();
             } else {
-                $res = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('status', $status)->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
-                $count = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('status', $status)->count();
+                $res = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('status', $status)->where('title', 'like', "%$value%")->orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
+                $count = PostDynamic::table($table)->whereIn('cat_id', $catIds)->where('status', $status)->where('title', 'like', "%$value%")->count();
             }
         }
 
