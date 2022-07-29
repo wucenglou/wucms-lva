@@ -66,7 +66,7 @@ class PostController extends Controller
         $navs = $this->toHumpTree($navss->toArray(), 'id', 'parent_id');
 
         $query = request('keyword');
-        $posts = PostArticle::where('title', 'like', "%$query%")->paginate(6);
+        $posts = PostArticle::where('title', 'like', "%$query%")->orWhere('content', 'like', "%$query%")->paginate(6);
         $posts->withPath('search?keyword=' . $query);
 
         return view('post/search', compact('posts', 'query','navs'));

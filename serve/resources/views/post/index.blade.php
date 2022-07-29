@@ -40,7 +40,7 @@
                         <h5 class="mb-1">{{ $post->title }}</h5>
                         <small class="text-muted">{{ $post->user->username }}</small>
                     </div>
-                    <p class="mb-1">{!! Str::limit($post->content, 260, '...') !!}</p>
+                    {{-- <p class="mb-1">{!! Str::limit($post->content, 600, '...') !!}</p> --}}
                     {{-- <small class="text-muted">{{ $post->user->username }}</small> --}}
                 </a>
             </div>
