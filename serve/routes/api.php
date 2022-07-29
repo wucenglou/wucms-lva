@@ -49,7 +49,7 @@ Route::get('test', function () {
      * 你也可以直接在代码中写死密钥对，但是小心不要将代码复制、上传或者分享给他人，
      * 以免泄露密钥对危及你的财产安全。
      * SecretId、SecretKey 查询: https://console.cloud.tencent.com/cam/capi */
-        $cred = new Credential("AKIDTkmY3IHRKwJOCk10i9JCqCH6fy0nIWT9", "SdXAXLuELCn8CzVkhPqzrSmpbQ5UcU6S");
+        $cred = new Credential(env("TENCENTCLOUD_SECRET_ID"), env("TENCENTCLOUD_SECRET_KEY"));
         //$cred = new Credential(getenv("TENCENTCLOUD_SECRET_ID"), getenv("TENCENTCLOUD_SECRET_KEY"));
 
         // 实例化一个http选项，可选的，没有特殊需求可以跳过
