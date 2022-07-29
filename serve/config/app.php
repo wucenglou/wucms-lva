@@ -69,8 +69,7 @@ return [
     |
     */
 
-    // 'timezone' => 'UTC',
-    'timezone' => 'PRC',
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'zh',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +108,7 @@ return [
     |
     */
 
-    'faker_locale' => 'zh_CN',
+    'faker_locale' => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
@@ -125,6 +124,24 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Maintenance Mode Driver
+    |--------------------------------------------------------------------------
+    |
+    | These configuration options determine the driver used to determine and
+    | manage Laravel's "maintenance mode" status. The "cache" driver will
+    | allow maintenance mode to be controlled across multiple machines.
+    |
+    | Supported drivers: "file", "cache"
+    |
+    */
+
+    'maintenance' => [
+        'driver' => 'file',
+        // 'store'  => 'redis',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -177,14 +194,13 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        // App\Providers\TelescopeServiceProvider::class,
-
 
         // 代理
         Jenssegers\Agent\AgentServiceProvider::class,
         // 验证码
         Mews\Captcha\CaptchaServiceProvider::class,
         Lauthz\LauthzServiceProvider::class,
+
     ],
 
     /*
@@ -199,14 +215,14 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        // 'ExampleClass' => App\Example\ExampleClass::class,
 
         // 代理
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         // 验证码
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
-
         'Enforcer' => Lauthz\Facades\Enforcer::class,
+
     ])->toArray(),
 
 ];

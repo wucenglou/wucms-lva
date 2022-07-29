@@ -21,7 +21,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function loginlog($request, $msg = '', $status='1')
+    public function loginlog($request, $msg = '', $status = '1')
     {
         $agent = new Agent();
         $agent->setUserAgent($request->userAgent());
@@ -45,8 +45,6 @@ class Controller extends BaseController
         }
 
         LoginLog::create(compact('uid', 'username', 'address', 'ip', 'useragent', 'platform', 'platform_ver', 'browser', 'browser_ver', 'device', 'device_type', 'msg', 'status'));
-
-
     }
 
     /**

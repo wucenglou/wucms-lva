@@ -33,7 +33,7 @@ Route::get('/logout', [AuthController::class, 'logout']);
 //注册页面
 Route::get('/register', [RegisterController::class, 'index']);
 //注册行为
-Route::post('/register', [RegisterController::class,'register']);
+Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/posts/search', [PostController::class, 'search']);
 Route::get('/posts', [PostController::class, 'index']);

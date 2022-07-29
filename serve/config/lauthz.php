@@ -32,7 +32,7 @@ return [
             'connection' => '',
 
             // Rule table name.
-            'rules_table' => 'casbin_rules',
+            'rules_table' => 'rules',
         ],
 
         'log' => [
