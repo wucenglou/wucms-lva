@@ -21,7 +21,7 @@
                     </h2>
                 </div>
                 <p class="blog-post-meta">{{$post->updated_at}}<a href="/user/{{$post->user->id}}">  作者:{{$post->user->username}}</a></p>
-                <p class="wang">
+                <p class="">
                 {!! $post->content !!}
                 </p>
                 {{-- <div>

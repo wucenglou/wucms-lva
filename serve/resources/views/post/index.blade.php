@@ -1,6 +1,5 @@
 @extends('layout.main')
 @section('content')
-
     {{-- <div class="col-sm-8 blog-main">
         @include('post.carousel')
         <div style="height: 20px;">
@@ -28,27 +27,27 @@
 
     <div class="col-sm-8">
         @include('post.carousel')
-        {{-- <div style="height: 20px;"> --}}
         <div class="list-group" style="margin-top: 1rem">
             @if ($cat)
-            分类：{{$cat->meta_title}}
+                分类：{{ $cat->meta_title }}
             @endif
-            @foreach ($posts as $post)
-            <div style="margin-top: .4rem">
-                <a href="/posts/{{ $post->id }}" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ $post->title }}</h5>
-                        <small class="text-muted">{{ $post->user->username }}</small>
+            <div class="list-group-item" style="border-radius: .5rem;">
+                @foreach ($posts as $post)
+                    <div class="" style="padding: 1rem;border-bottom:1px solid #eee;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <a href="/posts/{{ $post->id }}">
+                                <h5 class="mb-1">{{ $post->title }}{{ $post->id }}</h5>
+                            </a>
+                            <small class="text-muted">{{ $post->user->username }}</small>
+                        </div>
+                        <p class="">{!! Str::limit($post->content, 200, '...') !!}</p>
                     </div>
-                    {{-- <p class="mb-1">{!! Str::limit($post->content, 600, '...') !!}</p> --}}
-                    {{-- <small class="text-muted">{{ $post->user->username }}</small> --}}
-                </a>
+                @endforeach
             </div>
-            @endforeach  
         </div>
         <div>
             {{ $posts->links() }}
         </div>
-         
+
     </div>
 @endsection

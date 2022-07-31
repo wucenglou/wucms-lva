@@ -4,17 +4,17 @@ $.ajaxSetup({
     }
 })
 
-var editor = new wangEditor('content');
-if(editor.config){
-    // 上传图片（举例）
-    editor.config.uploadImgUrl = '/posts/image/upload';
+// var editor = new wangEditor('content');
+// if(editor.config){
+//     // 上传图片（举例）
+//     editor.config.uploadImgUrl = '/posts/image/upload';
     
-    // 设置 headers（举例）
-    editor.config.uploadHeaders = {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    };
-editor.create();
-}
+//     // 设置 headers（举例）
+//     editor.config.uploadHeaders = {
+//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//     };
+// editor.create();
+// }
 
 $(".preview_input").change(function(event){
     var file = event.currentTarget.files[0];

@@ -44,7 +44,7 @@ Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
 Route::put('/posts/{post}', [PostController::class, 'update']);
 Route::get('/posts/{post}/delete', [PostController::class, 'delete']);
 
-Route::get('/c/{cat}/{name}', [PostController::class, 'cat']);
+Route::get('/cn/{name}/{cat}', [PostController::class, 'cat']);
 
 Route::post('/posts/image/upload', [PostController::class, 'imageUpload']);
 

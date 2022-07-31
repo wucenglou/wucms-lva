@@ -1,6 +1,5 @@
 <template>
     <div />
-    dsfsggggggggggggggggggggggg
 </template>
 <script>
 import { useRouter } from 'vue-router'
@@ -11,5 +10,7 @@ export default {
 
 <script setup>
 const router = useRouter()
-router.go(-1)
+// onMounted(() => {
+    router.go(-1)
+// })
 </script>

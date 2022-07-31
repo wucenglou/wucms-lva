@@ -13,8 +13,7 @@
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
     {{-- <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <link rel="stylesheet" type="text/css" href="/css/wangEditor.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
 </head>
 
 <body>
@@ -30,7 +29,6 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     {{-- <script src="https://cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.js"></script> --}}
     {{-- <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> --}}
-    <script type="text/javascript" src="/js/wangEditor.min.js"></script>
     <script type="text/javascript" src="/js/ylaravel.js"></script>
 
 </body>

@@ -64,6 +64,7 @@ watch(() => props.theme, () => {
 </script>
 
 <style lang="scss" scoped>
+
 .el-sub-menu {
   ::v-deep(.el-sub-menu__title) {
     padding: 6px;
@@ -77,8 +78,9 @@ watch(() => props.theme, () => {
     height: 100%;
     line-height: 44px;
     background: v-bind(activeBackground) !important;
-    border-radius: 4px;
-    box-shadow: 0 0 2px 1px v-bind(activeBackground) !important;
+    // border-radius: 4px;
+    border-radius: 1rem;
+    // box-shadow: 0 0 2px 1px v-bind(activeBackground) !important;
 
     i {
       color: v-bind(activeText);

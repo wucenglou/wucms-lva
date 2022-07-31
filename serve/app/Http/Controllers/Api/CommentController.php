@@ -19,11 +19,12 @@ class CommentController extends Controller
         $page_size = request('pageSize');
         $catIds = request('catIds');
         $status = request('status');
+        $value = request("value") ?? '';
         // 偏移量计算，从多少条开始算起
         $page = ($cur_page - 1) * $page_size;
         // 一共多少数据
-        $count = Comment::count();
-        $res = Comment::orderBy('created_at', 'desc')->offset($page)->limit($page_size)->get();
+        $count = Comment::where('content', 'like', "%$value%")->count();
+        $res = Comment::orderBy('created_at', 'desc')->where('content', 'like', "%$value%")->offset($page)->limit($page_size)->get();
         foreach($res as $re){
             $re['mode_name'] = $re->mode->name;
             $re['cat_name'] = $re->cat->meta_title;

@@ -21,19 +21,19 @@
                         
                         @if (!empty($nav['children']))
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="/c/{{ $nav['name'] }}" id="navbardrop"
+                            <a class="nav-link dropdown-toggle" href="/cn/{{ $nav['name'] }}/{{ $nav['id'] }}" id="navbardrop"
                                 data-bs-toggle="dropdown">
                                 {{ $nav['metaTitle'] }}
                             </a>
                             <div class="dropdown-menu">
                                 @foreach ($nav['children'] as $n)
-                                <a class="dropdown-item" href="/c/{{$n['id'] }}/{{ $n['name'] }}">{{ $n['metaTitle'] }}</a>
+                                <a class="dropdown-item" href="/cn/{{ $n['name'] }}/{{$n['id'] }}">{{ $n['metaTitle'] }}</a>
                                 @endforeach
                             </div>
                         </li>
                         @else
                             <li class="nav-item"><a class="nav-link"
-                                    href="/c/{{$nav['id']}}/{{ $nav['name'] }}">{{ $nav['metaTitle'] }}</a>
+                                    href="/cn/{{ $nav['name'] }}/{{$nav['id']}}">{{ $nav['metaTitle'] }}</a>
                         @endif
                         </li>
                     @endforeach

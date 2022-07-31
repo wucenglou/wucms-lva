@@ -1,4 +1,4 @@
-<div>
+<div style=" border-radius: .5rem;width: 96%;overflow: hidden;margin: auto;">
     <!-- 轮播 -->
     <div id="demo" class="carousel slide" data-bs-ride="carousel">
 

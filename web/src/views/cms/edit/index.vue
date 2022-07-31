@@ -1,12 +1,13 @@
 <template>
     <div>
         <div class="gva-search-box">
-            <el-form ref="Form" :model="form" :rules="rules" label-width="78px">
+
+            <el-form ref="Form" :model="form" :rules="rules" label-width="50px">
                 <el-form-item label="栏目" prop="catId">
                     <el-cascader v-model="form.catId" :options="catOption" placeholder="栏目" :props="{
-                            multiple: false,
-                            checkStrictly: true, label: 'metaTitle', value: 'id', disabled: 'disabled', emitPath: false
-                        }" collapse-tags clearable />
+                        multiple: false,
+                        checkStrictly: true, label: 'metaTitle', value: 'id', disabled: 'disabled', emitPath: false
+                    }" collapse-tags clearable />
                 </el-form-item>
 
                 <el-form-item label="标题" prop="title">
@@ -75,22 +76,28 @@
                             style="width: 100%"
                         ></el-time-picker>
                     </el-col>
-                </el-form-item>-->
-                <el-form-item label="编辑器">
-                    <tinymce ref="editor" v-model="form.content" @child-event="contentUrl" :disabled="disabled"
-                        @onClick="onClick" />
-                    <div style="margin-top: 10px">
+                </el-form-item> -->
+                <!-- <el-form-item label="编辑器"> -->
+                <!-- <tinymce ref="editor" v-model="form.content" @child-event="contentUrl" :disabled="disabled"
+                        @onClick="onClick" /> -->
+                <div style="width: 100%">
+                    <editor v-model="form.content" />
+                </div>
+
+                <!-- <div style="margin-top: 10px">
                         <el-button @click="clear">清空内容</el-button>
                         <el-button @click="forbid">{{ disabled ? '已禁用' : '禁用' }}</el-button>
-                    </div>
-                </el-form-item>
+                    </div> -->
+                <!-- </el-form-item> -->
+                <div>
+                    图片附件上传
+                    <!-- <Images></Images> -->
+                </div>
 
-                <el-form-item v-if="notCheck">
-                    <div>
-                        <el-button>取消</el-button>
-                        <el-button type="primary" @click="onSubmit('create')">提交</el-button>
-                    </div>
-                </el-form-item>
+                <div v-if="notCheck" style="margin: 2rem;">
+                    <el-button>取消</el-button>
+                    <el-button type="primary" @click="onSubmit('create')">提交</el-button>
+                </div>
             </el-form>
         </div>
     </div>
@@ -104,9 +111,12 @@ export default {
 import { ref, reactive, onMounted } from 'vue'
 import { getCatList } from '@/api/cat'
 import { postPost, getPost } from '@/api/post'
-import tinymce from "@/components/tinymce/tinymce.vue";
+// import tinymce from "@/components/tinymce/tinymce.vue";
+import editor from "@/components/Editor/index.vue"
 import { ElMessage } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
+import ImagesUpload from "@/components/ImagesUpload/index.vue"
+import Images from "@/components/Images/index.vue"
 
 const router = useRouter()
 const route = useRoute()

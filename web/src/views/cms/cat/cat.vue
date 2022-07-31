@@ -4,8 +4,8 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button type="primary" icon="plus" @click="openDialog('add', 0)">新增根栏目</el-button>
-        <el-button type="primary" icon="plus" @click="openDialog('add', 0)">添加单页</el-button>
-        <el-button type="primary" icon="plus" @click="openDialog('add', 0)">批量添加</el-button>
+        <!-- <el-button type="primary" icon="plus" @click="openDialog('add', 0)">添加单页</el-button> -->
+        <!-- <el-button type="primary" icon="plus" @click="openDialog('add', 0)">批量添加</el-button> -->
       </div>
 
       <el-table :data="tableDataCat" default-expand-all border row-key="id" style="width: 100%">

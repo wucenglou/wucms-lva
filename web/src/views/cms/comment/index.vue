@@ -4,36 +4,22 @@
     <div class="gva-search-box">
       <el-form ref="searchForm" :inline="true" :model="searchInfo">
         <el-form-item label="选择模型">
-          <el-cascader
-            v-model="searchInfo.modeId"
-            :options="tableDataMode"
+          <el-cascader v-model="searchInfo.modeId" :options="tableDataMode"
             :props="{ checkStrictly: true, label: 'name', value: 'id', disabled: 'disabled', emitPath: false }"
-            :show-all-levels="false"
-            @change="BlurChange"
-            @visible-change="Blur"
-            filterable
-          />
+            :show-all-levels="false" @change="BlurChange" @visible-change="Blur" filterable />
         </el-form-item>
         <el-form-item label="栏目分类">
-          <el-cascader
-            v-model="searchInfo.catIds"
-            :options="tableDataCat"
-            placeholder="栏目分类"
-            @change="BlurChange"
-            @visible-change="Blur"
-            :props="{
+          <el-cascader v-model="searchInfo.catIds" :options="tableDataCat" placeholder="栏目分类" @change="BlurChange"
+            @visible-change="Blur" :props="{
               multiple: true,
               checkStrictly: true, label: 'metaTitle', value: 'id', disabled: 'disabled', emitPath: false
-            }"
-            collapse-tags
-            clearable
-          />
+            }" collapse-tags clearable />
         </el-form-item>
         <el-form-item label="关键词搜索">
-          <el-input placeholder="搜索" />
+          <el-input v-model="searchInfo.value" placeholder="搜索" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="search">查询</el-button>
+          <el-button type="primary" icon="search" @click="onSubmit('search')">查询</el-button>
           <el-button icon="refresh">重置</el-button>
         </el-form-item>
       </el-form>
@@ -42,27 +28,13 @@
       <div class="gva-btn-list">
         <el-button @click="onSubmit('add', 0)" type="primary">添加内容</el-button>
         <!-- <el-button @click="onSubmit('deleteids', 0)" type="danger">批量删除</el-button> -->
-        <el-select
-          v-model="statusType"
-          placeholder="Select"
-          style="width:10rem;margin-right: 1rem;margin-left: 1rem;"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="statusType" placeholder="Select" style="width:10rem;margin-right: 1rem;margin-left: 1rem;">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
         <el-button @click="onSubmit('batch', 0)" type="primary">批量操作</el-button>
       </div>
-      <el-table
-        :data="tableDataPost"
-        ref="multipleTableRef"
-        @selection-change="handleSelectionChange"
-        border
-        row-key="id"
-      >
+      <el-table :data="tableDataPost" ref="multipleTableRef" @selection-change="handleSelectionChange" border
+        row-key="id">
         <el-table-column type="selection" width="40" />
         <el-table-column label="id" min-width="60" prop="id" />
         <el-table-column label="类型" min-width="80" prop="modeName" />
@@ -114,17 +86,9 @@
         </el-table-column>
       </el-table>
       <div class="gva-pagination">
-        <el-pagination
-          small
-          :current-page="page"
-          :page-size="pageSize"
-          :page-sizes="[10, 20, 30, 40]"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
+        <el-pagination small :current-page="page" :page-size="pageSize" :page-sizes="[10, 20, 30, 40]" background
+          layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"></el-pagination>
       </div>
     </div>
   </div>
@@ -299,6 +263,10 @@ const onSubmit = async (key, id, row, type) => {
         await getTableData()
       }
       break
+    case 'search':
+      // const res_search = 
+      refreshTableData()
+      console.log("search")
     default:
       break
   }

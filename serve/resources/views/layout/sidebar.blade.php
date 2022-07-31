@@ -1,6 +1,6 @@
 <div id="sidebar" class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-    <div class="card" style="">
+    <div class="card" style="border-radius: .5rem">
         <div class="card-body">
             <h5 class="card-title">企鹅社区</h5>
             {{-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> --}}

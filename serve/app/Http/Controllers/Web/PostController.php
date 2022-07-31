@@ -72,7 +72,7 @@ class PostController extends Controller
         return view('post/search', compact('posts', 'query','navs'));
     }
 
-    public function cat(CatMenu $cat, $name)
+    public function cat($name,CatMenu $cat)
     {
         $navss = CatMenu::all();
         $navs = $this->toHumpTree($navss->toArray(), 'id', 'parent_id');
