@@ -9,7 +9,9 @@ class PostArticle extends Model
 {
     use HasFactory;
 
-    protected $guarded = []; //不可以注入字段
+    protected $guarded = [
+        'pic_list'
+    ]; //不可以注入字段
 
     // protected $fillable = [
     //     'cat_id',
@@ -39,6 +41,11 @@ class PostArticle extends Model
     public function userweb()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function imgs($mode_id)
+    {
+        return $this->hasMany(Img::class,'post_id', 'id')->where('mode_id',$mode_id)->orderBy('sort', 'desc')->orderBy('id', 'desc');
     }
 
     public function user()

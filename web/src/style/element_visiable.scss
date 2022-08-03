@@ -176,6 +176,9 @@
 
   .el-dialog__body {
     padding: 12px 6px;
+    img {
+      width: 98%;
+    }
   }
 
   .el-dialog__header {
@@ -183,14 +186,15 @@
       font-size: 14px;
       font-weight: 500;
     }
+    button {
+      top: -.2rem;
+      right: -.4rem;
+    }
 
     padding: 2px 20px 12px 20px;
     border-bottom: 1px solid #E4E4E4;
   }
 
-  // .el-dialog__headerbtn {
-  //   top: 16px;
-  // }
 
   .el-dialog__footer {
     padding: 0 16px 16px 0;

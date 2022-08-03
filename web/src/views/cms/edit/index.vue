@@ -91,7 +91,39 @@
                 <!-- </el-form-item> -->
                 <div>
                     图片附件上传
-                    <!-- <Images></Images> -->
+                    <el-upload ref="upload" action list-type="picture-card" :file-list="form.picList"
+                        :on-change="change" :http-request="handleUploadForm" :auto-upload="true">
+                        <el-icon>
+                            <Plus />
+                        </el-icon>
+                        <template #file="{ file }">
+                            <div>
+                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                <span class="el-upload-list__item-actions">
+                                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                                        <el-icon>
+                                            <zoom-in />
+                                        </el-icon>
+                                    </span>
+                                    <span v-if="!disabled" class="el-upload-list__item-delete"
+                                        @click="handleDownload(file)">
+                                        <el-icon>
+                                            <Download />
+                                        </el-icon>
+                                    </span>
+                                    <span v-if="!disabled" class="el-upload-list__item-delete"
+                                        @click="handleRemove(file)">
+                                        <el-icon>
+                                            <Delete />
+                                        </el-icon>
+                                    </span>
+                                </span>
+                            </div>
+                        </template>
+                    </el-upload>
+                    <el-dialog v-model="dialogVisible">
+                        <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                    </el-dialog>
                 </div>
 
                 <div v-if="notCheck" style="margin: 2rem;">
@@ -117,6 +149,8 @@ import { ElMessage } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 import ImagesUpload from "@/components/ImagesUpload/index.vue"
 import Images from "@/components/Images/index.vue"
+import { upload } from '@/api/upload'
+import { toRaw } from '@vue/reactivity'
 
 const router = useRouter()
 const route = useRoute()
@@ -134,9 +168,60 @@ const form = ref({
     content: "",
     // flag: [],
     // type: [],
+    picList: [],
     sort: 0,
     // page_views: '',
 })
+
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+const handlePictureCardPreview = (file) => {
+    dialogImageUrl.value = file.url
+    dialogVisible.value = true
+}
+
+const formData = new FormData()
+const handleUploadForm = (file) => {
+    // console.log(file)
+    formData.append("files[]", file.file);
+    // formData.append("id", 1);
+    // form.append("picList[]", file.file)
+    // upload(formData).then(res => {
+        // fileList.value = [res.data]
+        // console.log(fileList.value)
+    // })
+    // form.value.picList.push(file)
+}
+
+const handleRemove = (a,b) => {
+    console.log(a)
+    // console.lo
+    // console.log(form.value.picList.value)
+    // JSON.parse(JSON.stringify(form.value.picList))[0]
+    // for(let i = 0;i < form.value.picList.length;i++){
+    //     if (form.value.picList[i] === file) {
+    //         let res = toRaw(form.value.picList[i])
+    //         console.log(res.id)
+    //     }
+    // }
+    // form.value.picList.forEach(res => {
+    //     if(res['id']== file.id){
+            // form.value.picList.splice()
+    //     }
+    // })
+}
+
+const handleDownload = (file) => {
+    console.log(file)
+}
+
+// const filelist = new FormData();
+const change = (file) => {
+    // form.value.picList.push(file)
+    // const filelist = new FormData();
+    // console.log(form.value.picList)
+    // console.log(file)
+}
 
 // 查询
 const tableDataCat = ref([])
@@ -145,9 +230,12 @@ const getTableData = async () => {
     console.log(route.params)
     if (route.params && route.params.post_id) {
         const formData = await getPost(route.params)
+
         console.log(formData.data[0])
         if (formData.code === 0) {
             form.value = formData.data[0]
+            
+            // form.value.picList = []
         }
     }
     const tableCat = await getCatList()
@@ -230,13 +318,15 @@ const onSubmit = async (key, id, row) => {
         if (valid) {
             switch (key) {
                 case 'create':
-                    const res = await postPost(form.value)
+                    formData.append("form", JSON.stringify(form.value))
+                    const res = await postPost(formData)
                     if (res.code === 0) {
                         ElMessage({
                             type: 'success',
                             message: '添加成功',
                             showClose: true
                         })
+                        console.log("--------------------")
                         router.push({ name: 'content' })
                     }
                     console.log(form.value)

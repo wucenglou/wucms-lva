@@ -1,9 +1,9 @@
 <template>
     <el-upload action="#" list-type="picture-card" :auto-upload="false">
-        <el-icon>
+        
+            <el-icon>
             <Plus />
         </el-icon>
-
         <template #file="{ file }">
             <div>
                 <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
@@ -27,7 +27,6 @@
             </div>
         </template>
     </el-upload>
-
     <el-dialog v-model="dialogVisible">
         <img w-full :src="dialogImageUrl" alt="Preview Image" />
     </el-dialog>
