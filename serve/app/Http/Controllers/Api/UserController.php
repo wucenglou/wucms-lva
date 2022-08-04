@@ -51,11 +51,11 @@ class UserController extends Controller
     public function setUserAuthorities()
     {
         $res = request();
+        // dd($res);
         $user = User::find($res['id']);
         $user->authorities()->sync($res['authorityIds']);
         if (!array_intersect([$user['authority_id']], $res['authorityIds'])) {
             // 用户当前的角色和拥有的角色不匹配,则重置为已拥有角色中的其中一个。如果没有角色，则重置为初始0值
-
             $user->authority_id = $res['authorityIds'][0] ?? 0;
             $user->save();
         }
@@ -158,6 +158,9 @@ class UserController extends Controller
     public function getUserList()
     {
 
+        $r = request();
+        // dd($r);
+
         // 当前页 前端传过来
         $cur_page = request('page');
         $page_size = request('pageSize');
@@ -165,8 +168,12 @@ class UserController extends Controller
         $count = User::count();
         // 偏移量计算，从多少条开始算起
         $page = ($cur_page - 1) * $page_size;
-
-        $users = User::orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        $status = $r['status'] ?? '';
+        if($status){
+            $users = User::where('status', $r['status'])->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        } else {
+            $users = User::orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        }
         $res = $this->toHump($users->toArray());
         foreach ($users as $k => $user) {
             $res[$k]['authorities'] = $this->toHump($user->authorities->toArray());

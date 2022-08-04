@@ -91,7 +91,7 @@
                 <!-- </el-form-item> -->
                 <div>
                     图片附件上传
-                    <el-upload ref="upload" action list-type="picture-card" :file-list="form.picList"
+                    <el-upload ref="upload" action multiple list-type="picture-card" :file-list="form.picList"
                         :on-change="change" :http-request="handleUploadForm" :auto-upload="true">
                         <el-icon>
                             <Plus />
@@ -150,7 +150,6 @@ import { useRouter, useRoute } from 'vue-router'
 import ImagesUpload from "@/components/ImagesUpload/index.vue"
 import Images from "@/components/Images/index.vue"
 import { upload } from '@/api/upload'
-import { toRaw } from '@vue/reactivity'
 
 const router = useRouter()
 const route = useRoute()
@@ -187,28 +186,26 @@ const handleUploadForm = (file) => {
     // formData.append("id", 1);
     // form.append("picList[]", file.file)
     // upload(formData).then(res => {
-        // fileList.value = [res.data]
-        // console.log(fileList.value)
+    // fileList.value = [res.data]
+    // console.log(fileList.value)
     // })
     // form.value.picList.push(file)
 }
 
-const handleRemove = (a,b) => {
-    console.log(a)
-    // console.lo
-    // console.log(form.value.picList.value)
-    // JSON.parse(JSON.stringify(form.value.picList))[0]
-    // for(let i = 0;i < form.value.picList.length;i++){
-    //     if (form.value.picList[i] === file) {
-    //         let res = toRaw(form.value.picList[i])
-    //         console.log(res.id)
-    //     }
-    // }
-    // form.value.picList.forEach(res => {
-    //     if(res['id']== file.id){
-            // form.value.picList.splice()
-    //     }
-    // })
+const handleRemove = (file) => {
+    for (let i = 0; i < form.value.picList.length; i++) {
+        if (form.value.picList[i] === file) {
+            upload({ "deleteid": file.id }).then(res => {
+                if (!res['code']) {
+                    form.value.picList.splice(i)
+                    ElMessage({
+                        type: 'success',
+                        message: res.msg
+                    })
+                }
+            })
+        }
+    }
 }
 
 const handleDownload = (file) => {
@@ -234,7 +231,7 @@ const getTableData = async () => {
         console.log(formData.data[0])
         if (formData.code === 0) {
             form.value = formData.data[0]
-            
+
             // form.value.picList = []
         }
     }

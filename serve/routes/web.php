@@ -57,8 +57,8 @@ Route::post('/user/{user}/setting', [UserController::class, 'settingStore']);
 
 // Route::post('/posts/comment', "\App\Http\Controllers\PostController@comment");
 
-Route::get('/posts/{post}/zan', '\App\Http\Controllers\PostController@zan');
-Route::get('/posts/{post}/unzan', '\App\Http\Controllers\PostController@unzan');
+// Route::get('/posts/{post}/zan', '\App\Http\Controllers\PostController@zan');
+// Route::get('/posts/{post}/unzan', '\App\Http\Controllers\PostController@unzan');
 
 // 个人主页
 Route::get('/user/{user}', [UserController::class, 'show']);

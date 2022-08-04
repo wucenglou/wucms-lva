@@ -1,6 +1,28 @@
 <template>
     <div>
         <warning-bar title="注：右上角头像下拉可切换角色" />
+        <div class="gva-search-box">
+            <el-form ref="searchForm" :inline="true" :model="searchInfo">
+                <el-form-item label="选择角色">
+                    <el-cascader v-model="searchInfo.authorityId" :options="authOptions"
+                        :props="{ multiple: true, checkStrictly: true, label: 'authorityName', value: 'authorityId', emitPath: false }"
+                        :show-all-levels="false" @change="BlurChange" @visible-change="Blur" filterable />
+                </el-form-item>
+                <el-form-item label="选择状态">
+                    <el-cascader v-model="searchInfo.status" :options="statusData" placeholder="状态" @change="BlurChange"
+                        @visible-change="Blur"
+                        :props="{ checkStrictly: true, label: 'label', value: 'value', disabled: 'disabled', emitPath: false }"
+                        collapse-tags clearable />
+                </el-form-item>
+                <el-form-item label="搜索用户">
+                    <el-input v-model="searchInfo.value" placeholder="搜索" />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" icon="search" @click="onSubmit('search')">查询</el-button>
+                    <el-button icon="refresh">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
         <div class="gva-table-box">
             <div class="gva-btn-list">
                 <el-button type="primary" icon="plus" @click="addUser">新增用户</el-button>
@@ -42,7 +64,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column align="left" label="状态" min-width="150" prop="status">
-                    <template #default="scope">{{ scope.row.status ? '账号正常' : '已被封禁' }}</template>
+                    <template #default="scope">{{ scope.row.status == 1 ? '账号正常' : '已被封禁' }}</template>
                 </el-table-column>
                 <el-table-column align="left" label="用户角色" min-width="150">
                     <template #default="scope">
@@ -65,7 +87,8 @@
                                 <el-button type="primary" icon="delete">删除</el-button>
                             </template>
                         </el-popover>
-                        <el-button type="primary" icon="magic-stick" @click="resetPasswordFunc(scope.row)">重置密码</el-button>
+                        <el-button type="primary" icon="magic-stick" @click="resetPasswordFunc(scope.row)">重置密码
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -173,6 +196,17 @@ const optionsBatch = ref([
     },
 ])
 
+const statusData = ref([
+    {
+        value: 1,
+        label: '正常状态',
+    },
+    {
+        value: 2,
+        label: '封禁状态',
+    }
+])
+
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
@@ -199,7 +233,6 @@ const getTableData = async () => {
         pageSize.value = table.data.pageSize
     }
 }
-getTableData()
 
 watch(() => tableData.value, () => {
     setAuthorityIds()
@@ -217,6 +250,8 @@ const setAuthorityIds = () => {
 const initPage = async () => {
     getTableData()
     const res = await getAuthorityList({ page: 1, pageSize: 999 })
+    searchInfo.value.authorities =
+    console.log(res)
     setOptions(res.data.list)
 }
 
@@ -362,10 +397,10 @@ const closeEdit = (row) => {
     row.editFlag = false
 }
 
-const deleteUserFunc = async(row) => {
+const deleteUserFunc = async (row) => {
     const res = await deleteUser({ id: row.id })
     if (res.code === 0) {
-        ElMessage({ message: '删除成功',type: 'success'})
+        ElMessage({ message: '删除成功', type: 'success' })
         await getTableData()
         row.visible = false
     }
