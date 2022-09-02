@@ -169,11 +169,27 @@ class UserController extends Controller
         // 偏移量计算，从多少条开始算起
         $page = ($cur_page - 1) * $page_size;
         $status = $r['status'] ?? '';
-        if($status){
-            $users = User::where('status', $r['status'])->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        $authorityIds = request('authorityId') ?? [];
+        // dd($authorityIds);
+        $value = request("value") ?? '';
+        // $users = User::where('username', 'like', "%$value%")->orwhereIn('status', [$r['status']])->orwhereIn('authority_id', $authorityIds)->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        if ($authorityIds) {
+            if ($status) {
+                $users = User::where('status', $r['status'])->whereIn('authority_id', $authorityIds)->where('username', 'like', "%$value%")->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+            } else {
+                $users = User::whereIn('authority_id', $authorityIds)->orderBy('created_at', 'asc')->where('username', 'like', "%$value%")->offset($page)->limit($page_size)->get();
+            }
         } else {
-            $users = User::orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+            if ($status) {
+                $users = User::where('status', $r['status'])->where('username', 'like', "%$value%")->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+            } else {
+                $users = User::where('username', 'like', "%$value%")->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+            }
         }
+        // if ($status) {
+        // } else {
+        //     $users = User::orwhereIn('authority_id', $authorityIds)->orderBy('created_at', 'asc')->offset($page)->limit($page_size)->get();
+        // }
         $res = $this->toHump($users->toArray());
         foreach ($users as $k => $user) {
             $res[$k]['authorities'] = $this->toHump($user->authorities->toArray());

@@ -6,7 +6,7 @@
                 <el-form-item label="选择角色">
                     <el-cascader v-model="searchInfo.authorityId" :options="authOptions"
                         :props="{ multiple: true, checkStrictly: true, label: 'authorityName', value: 'authorityId', emitPath: false }"
-                        :show-all-levels="false" @change="BlurChange" @visible-change="Blur" filterable />
+                        :show-all-levels="false" @change="BlurChange" @visible-change="Blur" collapse-tags clearable />
                 </el-form-item>
                 <el-form-item label="选择状态">
                     <el-cascader v-model="searchInfo.status" :options="statusData" placeholder="状态" @change="BlurChange"
@@ -19,7 +19,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="search" @click="onSubmit('search')">查询</el-button>
-                    <el-button icon="refresh">重置</el-button>
+                    <!-- <el-button icon="refresh">重置</el-button> -->
                 </el-form-item>
             </el-form>
         </div>
@@ -403,6 +403,18 @@ const deleteUserFunc = async (row) => {
         ElMessage({ message: '删除成功', type: 'success' })
         await getTableData()
         row.visible = false
+    }
+}
+
+const haveChange = ref(false)
+const BlurChange = async (v) => {
+    haveChange.value = true
+}
+const Blur = async (v) => {
+    if (!v && haveChange.value) {
+        haveChange.value = false
+        console.log(searchInfo.value)
+        await getTableData()
     }
 }
 
