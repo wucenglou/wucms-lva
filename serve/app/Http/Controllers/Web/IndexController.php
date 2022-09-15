@@ -10,7 +10,6 @@ use App\Models\PostArticle;
 
 class IndexController extends Controller
 {
-    //
     public function index()
     {
         $navss = CatMenu::all();
