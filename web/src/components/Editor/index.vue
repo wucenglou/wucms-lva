@@ -48,7 +48,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const defaultSetting = ref({
-    language_url: 'tinymce/langs/zh-Hans.js',
+    language_url: '/tinymce/langs/zh-Hans.js',
     language: 'zh-Hans',
     skin_url: 'tinymce/skins/ui/oxide',
     content_css: 'tinymce/skins/content/default/content.min.css',
@@ -66,12 +66,18 @@ const defaultSetting = ref({
         '%Y-%m-%d',
         '%H:%M:%S'
     ],
+    // images_upload_base_path: '/',
     images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
         var formData;
         formData = new FormData();
         formData.append("file", blobInfo.blob(), blobInfo.filename());
         upload(formData).then(res => {
-            resolve(res.data.location)
+            console.log("fsdfsdf")
+            // const a = { 'location':  res.data.file.url }
+            // res.data['location'] = res.data.file.url
+            // console.log(res.data)
+            // console.log(a)
+            // resolve(res.data.location)
         })
     }),
 })

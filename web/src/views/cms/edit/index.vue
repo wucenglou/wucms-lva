@@ -23,17 +23,6 @@
                     <el-input-number v-model="form.sort" :precision="2" :step="0.01" :max="10" />
                 </el-form-item>
 
-                <!-- <el-form-item label="权重" prop="sort">
-                    <el-input-number
-                        v-model="form.sort"
-                        :min="1"
-                        :max="10000"
-                        size="small"
-                        controls-position="right"
-                        @change="handleChange"
-                    />
-                </el-form-item>-->
-
                 <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="form.status">
                         <el-radio label="1">已发布</el-radio>

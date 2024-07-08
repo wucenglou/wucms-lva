@@ -29,12 +29,12 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item style="position: relative" prop="captcha">
+          <!-- <el-form-item style="position: relative" prop="captcha">
             <el-input v-model="loginFormData.captcha" name="logVerify" placeholder="请输入验证码" style="width: 60%" />
             <div class="vPic">
               <img v-if="picPath" :src="picPath" alt="请输入验证码" @click="loginVerify()" />
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button type="primary" style="width: 46%" @click="checkInit">前往初始化</el-button>
             <el-button type="primary" style="width: 46%; margin-left: 8%" @click="submitForm">登 录</el-button>
@@ -104,10 +104,10 @@ const loginFormData = reactive({
 const rules = reactive({
   username: [{ validator: checkUsername, trigger: 'blur'}],
   password: [{ validator: checkPassword, trigger: 'blur'}],
-  captcha: [
-    { required: true, message: '请输入验证码', trigger: 'blur'},
-    { message: '验证码格式不正确', trigger: 'blur'},
-  ]
+  // captcha: [
+  //   { required: true, message: '请输入验证码', trigger: 'blur'},
+  //   { message: '验证码格式不正确', trigger: 'blur'},
+  // ]
 })
 
 const userStore = useUserStore()

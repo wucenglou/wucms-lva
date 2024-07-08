@@ -421,12 +421,6 @@ template {
 HTML,
 body,
 div,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
 ul,
 ol,
 dl,
@@ -458,9 +452,6 @@ address,
 caption,
 cite,
 code,
-dfn,
-em,
-strong,
 th,
 var {
     font-style: normal;
@@ -469,22 +460,6 @@ var {
 
 a {
     text-decoration: none;
-}
-
-a:link {
-    color: #fff;
-}
-
-a:visited {
-    color: #fff;
-}
-
-a:hover {
-    color: #fff;
-}
-
-a:active {
-    color: #fff;
 }
 
 input::-ms-clear {
@@ -575,7 +550,7 @@ li {
         top: 0;
     }
 
-    .el-aside {
+    .gva-aside {
         -webkit-transition: width .2s;
         transition: width .2s;
         width: $width-aside;
@@ -597,11 +572,13 @@ li {
             line-height: $height-aside-tilte;
             text-align: center;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             .logoimg {
                 width: $width-aside-img;
                 height: $height-aside-img;
-                vertical-align: middle;
                 background: #fff;
                 border-radius: 50%;
                 padding: 3px;
@@ -612,26 +589,21 @@ li {
                 color: #fff;
                 font-weight: 600;
                 font-size: 20px;
-                vertical-align: middle;
                 padding-left: 10px;
             }
         }
     }
 
     .aside {
-        .el-menu-item {
-            >div {
-                padding: 0 15px !important;
+        .el-menu--collapse {
+            >.el-menu-item {
+                display: flex;
+                justify-content: center;
             }
         }
 
         .el-sub-menu {
             .el-menu {
-                .el-menu-item {
-                    height: 44px;
-                    line-height: 44px;
-                }
-
                 .is-active {
 
                     // 关闭三级菜单二级菜单样式
@@ -648,21 +620,6 @@ li {
                 }
             }
         }
-
-        .el-menu-item:focus,
-        .el-menu-item:hover {
-            background-color: transparent;
-        }
-
-        .el-menu-item:hover i,
-        .el-menu-item:hover span {
-            color: #fff;
-        }
-
-        .el-sub-menu__title:hover i,
-        .el-sub-menu__title:hover span {
-            color: #fff;
-        }
     }
 
     .hideside {
@@ -672,7 +629,7 @@ li {
     }
 
     .mobile.hideside {
-        .el-aside {
+        .gva-aside {
             -webkit-transition-duration: .2s;
             transition-duration: .2s;
             -webkit-transform: translate3d(-210px, 0, 0);
@@ -681,7 +638,7 @@ li {
     }
 
     .mobile {
-        .el-aside {
+        .gva-aside {
             -webkit-transition: -webkit-transform .28s;
             transition: -webkit-transform .28s;
             transition: transform .28s;
@@ -692,8 +649,6 @@ li {
 
     .main-cont.el-main {
         min-height: 100%;
-        -webkit-transition: margin-left .28s;
-        transition: margin-left .28s;
         margin-left: $width-aside;
         position: relative;
     }
@@ -753,10 +708,10 @@ li {
 
         th {
             padding: 6px 0;
-            background: #F7FBFF;
 
             .cell {
                 color: rgba($color: #000000, $alpha: 0.85);
+                font-size: 14px;
                 line-height: 40px;
                 min-height: 40px;
             }
@@ -777,13 +732,14 @@ li {
         }
 
         th.is-leaf {
+            background: #F7FBFF;
             border-bottom: none;
         }
     }
 
-    // .el-pagination {
-    //     padding: 20px 0 0 0;
-    // }
+    .el-pagination {
+        padding: 20px 0 0 0;
+    }
 
     .upload-demo,
     .upload {
@@ -796,9 +752,9 @@ li {
     }
 
     .el-input {
-        // .el-input__suffix {
-        //     margin-top: -3px;
-        // }
+        .el-input__suffix {
+            margin-top: -3px;
+        }
 
         &.is-disabled {
             .el-input__suffix {
@@ -815,11 +771,11 @@ li {
         }
     }
 
-    // .el-input__inner {
-    //     border-color: rgba($color: #000000, $alpha: 0.15);
-    //     height: 32px;
-    //     border-radius: 2px;
-    // }
+    .el-input__inner {
+        border-color: rgba($color: #000000, $alpha: 0.15);
+        height: 32px;
+        border-radius: 2px;
+    }
 }
 
 .admin-box:after,
@@ -859,26 +815,26 @@ li {
     background-color: #ffffff;
 }
 
-// .el-pagination {
+.el-pagination {
 
-//     .btn-prev,
-//     .btn-next {
-//         border: 1px solid #ddd;
-//         border-radius: 4px;
-//     }
+    .btn-prev,
+    .btn-next {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
 
-//     .el-pager {
-//         li {
-//             color: #666;
-//             font-size: 12px;
-//             margin: 0 5px;
-//             border: 1px solid #ddd;
-//             border-radius: 4px;
-//         }
-//     }
+    .el-pager {
+        li {
+            color: #666;
+            font-size: 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    }
 
-//     padding: 20px 0 !important;
-// }
+    padding: 20px 0 !important;
+}
 
 .el-row {
     padding: 10px 0;
@@ -1027,21 +983,6 @@ li {
         }
     }
 }
-
-// .el-input-number__decrease,
-// .el-input-number__increase {
-//     position: absolute;
-//     z-index: 1;
-//     top: 3px !important;
-//     width: 42px;
-//     height: 29px;
-//     line-height: 29px;
-//     text-align: center;
-//     background: #F5F7FA;
-//     color: #606266;
-//     cursor: pointer;
-//     font-size: 12px;
-// }
 
 $headerHigh: 52px;
 $mainHight: 100vh;
@@ -1221,14 +1162,6 @@ $mainHight: 100vh;
         margin-right: 24px;
         color: rgba($color: #000000, $alpha: 0.65);
     }
-}
-
-.transition-box {
-    overflow: hidden;
-    width: 120px;
-    margin-right: 32px;
-    text-align: center;
-    margin-top: -12px;
 }
 
 .screenfull {
