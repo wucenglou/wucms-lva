@@ -93,13 +93,13 @@ class UserController extends Controller
         //     $this->loginlog($request, '验证码错误或过期', 0);
         //     return response()->json(['code' => 7, 'data' => '', 'msg' => "验证码错误或过期"]);
         // }
-        $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        // $request->validate([
+        //     'username' => 'required|string',
+        //     'password' => 'required|string',
+        // ]);
         $credentials = request(['username', 'password']);
         if (!Auth::attempt($credentials)) {
-            $this->loginlog($request, '登录失败', 0);
+            // $this->loginlog($request, '登录失败', 0);
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
